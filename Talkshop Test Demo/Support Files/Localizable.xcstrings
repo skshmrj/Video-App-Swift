@@ -1,7 +1,28 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-
+    "my_feed_tab_item_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "My Feed"
+          }
+        }
+      }
+    },
+    "my_profile_tab_bar_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "My Profile"
+          }
+        }
+      }
+    }
   },
   "version" : "1.0"
 }

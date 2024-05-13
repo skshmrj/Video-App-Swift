@@ -7,6 +7,11 @@
 
 import UIKit
 
+struct FeedCellContent: Hashable {
+    let title: String?
+    
+}
+
 final class FeedCell: UICollectionViewCell {
     
     private let titleLabel: UILabel = {
@@ -27,7 +32,7 @@ final class FeedCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func layout() {
+    private func layout() {
         contentView.addSubview(titleLabel)
         
         NSLayoutConstraint.activate([
@@ -36,5 +41,9 @@ final class FeedCell: UICollectionViewCell {
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10)
         ])
+    }
+    
+    func configure(content: FeedCellContent) {
+        titleLabel.text = content.title
     }
 }

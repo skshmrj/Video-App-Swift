@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+protocol TSViewControllerFactoryProtocol {
+    
+    func createMyFeedViewController(viewModel: MyFeedProtocol) -> MyFeedViewController
+    
+    func createMyProfileViewController(viewModel: MyProfileProtocol) -> MyProfileViewController
+    
+}

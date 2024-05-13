@@ -6,24 +6,37 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
+/// View controller responsible for displaying a feed.
 final class MyFeedViewController: UIViewController {
     
-    private var dataSource: UICollectionViewDiffableDataSource<Section, Item>?
+    /// The view model driving the feed.
+    let viewModel: MyFeedProtocol
     
+    /// The data source for the collection view.
+    private var dataSource: UICollectionViewDiffableDataSource<MyFeedDataSource.Section, MyFeedDataSource.Item>?
+    
+    /// Dispose bag for RxSwift subscriptions.
+    private let disposeBag = DisposeBag()
+    
+    /// Collection view for displaying the feed.
     private lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: createCollectionViewLayout())
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .systemBackground
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "FeedCell")
         return collectionView
     }()
     
-    init() {
+    /// Initializes the view controller with a view model.
+    /// - Parameter viewModel: The view model for the feed.
+    init(viewModel: MyFeedProtocol) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
-        view.backgroundColor = .green
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -31,13 +44,14 @@ final class MyFeedViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         layout()
-        dataSource = makeDataSource()
-        updateDataSource()
+        bind()
     }
 }
 
+// MARK: - Private Methods
 extension MyFeedViewController {
-    private func layout(){
+    /// Sets up the layout constraints for the collection view.
+    private func layout() {
         view.addSubview(collectionView)
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -46,10 +60,47 @@ extension MyFeedViewController {
             collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
         ])
     }
+    
+    /// Binds view model outputs to the view.
+    private func bind() {
+        collectionView.register(FeedCell.self, forCellWithReuseIdentifier: "FeedCell")
+        
+        bindDataSource()
+        
+        let output = viewModel.connect(input: .init())
+        
+        output.dataSource
+            .map { info -> NSDiffableDataSourceSnapshot in
+                var snapshot = NSDiffableDataSourceSnapshot<MyFeedDataSource.Section, MyFeedDataSource.Item>()
+                snapshot.appendSections(info.map { $0.section })
+                info.forEach {
+                    snapshot.appendItems($0.rows, toSection: $0.section)
+                }
+                return snapshot
+            }
+            .observe(on: MainScheduler.instance)
+            .withUnretained(self)
+            .subscribe(onNext: { this, snapshot in
+                this.dataSource?.apply(snapshot, animatingDifferences: false)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    /// Sets up the data source for the collection view.
+    private func bindDataSource() {
+        dataSource = UICollectionViewDiffableDataSource<MyFeedDataSource.Section, MyFeedDataSource.Item>(collectionView: collectionView) { [weak self] collectionView, indexPath, item in
+            switch item {
+            case .myFeedCell(let content):
+                return self?.getFeedCell(collectionView: collectionView, content: content, indexPath: indexPath)
+            }
+        }
+    }
 }
 
+// MARK: - Layout
 extension MyFeedViewController {
-    
+    /// Creates the layout for the collection view.
+    /// - Returns: The compositional layout for the collection view.
     private func createCollectionViewLayout() -> UICollectionViewCompositionalLayout {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -63,40 +114,21 @@ extension MyFeedViewController {
         let layout = UICollectionViewCompositionalLayout(section: section)
         return layout
     }
-    
 }
 
-
+// MARK: - Cell Configuration
 extension MyFeedViewController {
-    
-    private func updateDataSource() {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
-        snapshot.appendSections([.main])
-        let items: [Item] = [.init(id: "abc", title: "My Feed first cell")]
-        snapshot.appendItems(items, toSection: .main)
-        dataSource?.apply(snapshot, animatingDifferences: true)
-    }
-    
-    private func makeDataSource() -> UICollectionViewDiffableDataSource<Section, Item> {
-        let dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) { collectionView, indexPath, item in
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FeedCell", for: indexPath)
-            cell.contentView.backgroundColor = .systemGray5
-            cell.contentView.layer.cornerRadius = 8
-            let label = UILabel(frame: cell.contentView.bounds.insetBy(dx: 10, dy: 10))
-            label.text = item.title
-            cell.contentView.addSubview(label)
-            return cell
+    /// Dequeues and configures a feed cell.
+    /// - Parameters:
+    ///   - collectionView: The collection view.
+    ///   - content: The content to configure the cell with.
+    ///   - indexPath: The index path of the cell.
+    /// - Returns: A configured feed cell.
+    private func getFeedCell(collectionView: UICollectionView, content: FeedCellContent, indexPath: IndexPath) -> FeedCell? {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FeedCell", for: indexPath) as? FeedCell else {
+            return nil
         }
-        return dataSource
+        cell.configure(content: content)
+        return cell
     }
-    
-}
-
-enum Section: Hashable {
-    case main
-}
-
-struct Item: Hashable {
-    let id: String
-    let title: String
 }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3F463655BBE3A0A72FDAE98E /* Pods_Talkshop_Test_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 022473A571A7D8237F913131 /* Pods_Talkshop_Test_Demo.framework */; };
 		4012F95B2BEFBDA000BD5F0E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4012F95A2BEFBDA000BD5F0E /* AppDelegate.swift */; };
 		4012F95D2BEFBDA000BD5F0E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4012F95C2BEFBDA000BD5F0E /* SceneDelegate.swift */; };
 		4012F9642BEFBDA100BD5F0E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4012F9632BEFBDA100BD5F0E /* Assets.xcassets */; };
@@ -16,9 +17,18 @@
 		4012F9732BEFC06900BD5F0E /* MyProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4012F9722BEFC06900BD5F0E /* MyProfileViewController.swift */; };
 		4012F97A2BEFD31200BD5F0E /* FeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4012F9792BEFD31200BD5F0E /* FeedCell.swift */; };
 		4012F9832BEFD7A600BD5F0E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4012F9822BEFD7A600BD5F0E /* Main.storyboard */; };
+		4012F9862BEFD8D200BD5F0E /* TSViewControllerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4012F9852BEFD8D200BD5F0E /* TSViewControllerFactory.swift */; };
+		4012F9882BEFD8F400BD5F0E /* TSViewControllerFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4012F9872BEFD8F400BD5F0E /* TSViewControllerFactoryProtocol.swift */; };
+		4012F98A2BEFDB2D00BD5F0E /* AppStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4012F9892BEFDB2D00BD5F0E /* AppStyle.swift */; };
+		4012F98C2BEFDF5F00BD5F0E /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 4012F98B2BEFDF5F00BD5F0E /* Localizable.xcstrings */; };
+		4012F98F2BEFE03600BD5F0E /* Strings + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4012F98E2BEFE03600BD5F0E /* Strings + Extension.swift */; };
+		4012F9912BF0D0B400BD5F0E /* MyFeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4012F9902BF0D0B400BD5F0E /* MyFeedViewModel.swift */; };
+		4012F9932BF0D0C600BD5F0E /* MyProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4012F9922BF0D0C600BD5F0E /* MyProfileViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		022473A571A7D8237F913131 /* Pods_Talkshop_Test_Demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Talkshop_Test_Demo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0E3876F0169F1D66815D8729 /* Pods-Talkshop Test Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Talkshop Test Demo.release.xcconfig"; path = "Target Support Files/Pods-Talkshop Test Demo/Pods-Talkshop Test Demo.release.xcconfig"; sourceTree = "<group>"; };
 		4012F9572BEFBDA000BD5F0E /* Talkshop Test Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Talkshop Test Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4012F95A2BEFBDA000BD5F0E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4012F95C2BEFBDA000BD5F0E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -30,6 +40,14 @@
 		4012F9722BEFC06900BD5F0E /* MyProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileViewController.swift; sourceTree = "<group>"; };
 		4012F9792BEFD31200BD5F0E /* FeedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCell.swift; sourceTree = "<group>"; };
 		4012F9822BEFD7A600BD5F0E /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		4012F9852BEFD8D200BD5F0E /* TSViewControllerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TSViewControllerFactory.swift; sourceTree = "<group>"; };
+		4012F9872BEFD8F400BD5F0E /* TSViewControllerFactoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TSViewControllerFactoryProtocol.swift; sourceTree = "<group>"; };
+		4012F9892BEFDB2D00BD5F0E /* AppStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStyle.swift; sourceTree = "<group>"; };
+		4012F98B2BEFDF5F00BD5F0E /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		4012F98E2BEFE03600BD5F0E /* Strings + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Strings + Extension.swift"; sourceTree = "<group>"; };
+		4012F9902BF0D0B400BD5F0E /* MyFeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFeedViewModel.swift; sourceTree = "<group>"; };
+		4012F9922BF0D0C600BD5F0E /* MyProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileViewModel.swift; sourceTree = "<group>"; };
+		5AFFC7DF8D89C3EFACA07FF9 /* Pods-Talkshop Test Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Talkshop Test Demo.debug.xcconfig"; path = "Target Support Files/Pods-Talkshop Test Demo/Pods-Talkshop Test Demo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,6 +55,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F463655BBE3A0A72FDAE98E /* Pods_Talkshop_Test_Demo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -48,6 +67,8 @@
 			children = (
 				4012F9592BEFBDA000BD5F0E /* Talkshop Test Demo */,
 				4012F9582BEFBDA000BD5F0E /* Products */,
+				F1DDB5171817B5D3F557CCCE /* Pods */,
+				E08043E90A5DC6171208BC87 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -124,6 +145,8 @@
 		4012F97E2BEFD71300BD5F0E /* Factories */ = {
 			isa = PBXGroup;
 			children = (
+				4012F9852BEFD8D200BD5F0E /* TSViewControllerFactory.swift */,
+				4012F9872BEFD8F400BD5F0E /* TSViewControllerFactoryProtocol.swift */,
 			);
 			path = Factories;
 			sourceTree = "<group>";
@@ -142,6 +165,7 @@
 			isa = PBXGroup;
 			children = (
 				4012F9702BEFC05A00BD5F0E /* MyFeedViewController.swift */,
+				4012F9902BF0D0B400BD5F0E /* MyFeedViewModel.swift */,
 			);
 			path = "My Feed";
 			sourceTree = "<group>";
@@ -150,6 +174,7 @@
 			isa = PBXGroup;
 			children = (
 				4012F9722BEFC06900BD5F0E /* MyProfileViewController.swift */,
+				4012F9922BF0D0C600BD5F0E /* MyProfileViewModel.swift */,
 			);
 			path = "My Profile";
 			sourceTree = "<group>";
@@ -157,11 +182,39 @@
 		4012F9842BEFD7C300BD5F0E /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
+				4012F98D2BEFE02600BD5F0E /* Extensions */,
 				4012F9632BEFBDA100BD5F0E /* Assets.xcassets */,
 				4012F9652BEFBDA100BD5F0E /* LaunchScreen.storyboard */,
 				4012F9822BEFD7A600BD5F0E /* Main.storyboard */,
+				4012F9892BEFDB2D00BD5F0E /* AppStyle.swift */,
+				4012F98B2BEFDF5F00BD5F0E /* Localizable.xcstrings */,
 			);
 			path = "Support Files";
+			sourceTree = "<group>";
+		};
+		4012F98D2BEFE02600BD5F0E /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				4012F98E2BEFE03600BD5F0E /* Strings + Extension.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		E08043E90A5DC6171208BC87 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				022473A571A7D8237F913131 /* Pods_Talkshop_Test_Demo.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F1DDB5171817B5D3F557CCCE /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				5AFFC7DF8D89C3EFACA07FF9 /* Pods-Talkshop Test Demo.debug.xcconfig */,
+				0E3876F0169F1D66815D8729 /* Pods-Talkshop Test Demo.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -171,9 +224,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4012F96B2BEFBDA100BD5F0E /* Build configuration list for PBXNativeTarget "Talkshop Test Demo" */;
 			buildPhases = (
+				5CC0A12373CCB2A108AC80AD /* [CP] Check Pods Manifest.lock */,
 				4012F9532BEFBDA000BD5F0E /* Sources */,
 				4012F9542BEFBDA000BD5F0E /* Frameworks */,
 				4012F9552BEFBDA000BD5F0E /* Resources */,
+				A048486679340DE67798E509 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -224,22 +279,71 @@
 			files = (
 				4012F9832BEFD7A600BD5F0E /* Main.storyboard in Resources */,
 				4012F9642BEFBDA100BD5F0E /* Assets.xcassets in Resources */,
+				4012F98C2BEFDF5F00BD5F0E /* Localizable.xcstrings in Resources */,
 				4012F9672BEFBDA100BD5F0E /* Base in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		5CC0A12373CCB2A108AC80AD /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Talkshop Test Demo-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A048486679340DE67798E509 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Talkshop Test Demo/Pods-Talkshop Test Demo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Talkshop Test Demo/Pods-Talkshop Test Demo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Talkshop Test Demo/Pods-Talkshop Test Demo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		4012F9532BEFBDA000BD5F0E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4012F9882BEFD8F400BD5F0E /* TSViewControllerFactoryProtocol.swift in Sources */,
 				4012F9732BEFC06900BD5F0E /* MyProfileViewController.swift in Sources */,
+				4012F9862BEFD8D200BD5F0E /* TSViewControllerFactory.swift in Sources */,
 				4012F96F2BEFBED200BD5F0E /* TSTabViewController.swift in Sources */,
+				4012F98F2BEFE03600BD5F0E /* Strings + Extension.swift in Sources */,
 				4012F95B2BEFBDA000BD5F0E /* AppDelegate.swift in Sources */,
+				4012F9912BF0D0B400BD5F0E /* MyFeedViewModel.swift in Sources */,
 				4012F9712BEFC05A00BD5F0E /* MyFeedViewController.swift in Sources */,
+				4012F98A2BEFDB2D00BD5F0E /* AppStyle.swift in Sources */,
 				4012F95D2BEFBDA000BD5F0E /* SceneDelegate.swift in Sources */,
+				4012F9932BF0D0C600BD5F0E /* MyProfileViewModel.swift in Sources */,
 				4012F97A2BEFD31200BD5F0E /* FeedCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -379,12 +483,14 @@
 		};
 		4012F96C2BEFBDA100BD5F0E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5AFFC7DF8D89C3EFACA07FF9 /* Pods-Talkshop Test Demo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9G55Z8GBRW;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Talkshop Test Demo/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -407,12 +513,14 @@
 		};
 		4012F96D2BEFBDA100BD5F0E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0E3876F0169F1D66815D8729 /* Pods-Talkshop Test Demo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9G55Z8GBRW;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Talkshop Test Demo/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

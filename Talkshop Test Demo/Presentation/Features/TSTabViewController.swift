@@ -7,35 +7,52 @@
 
 import UIKit
 
+/// A custom tab view controller for Talkshop Test Demo app.
 final class TSTabViewController: UITabBarController {
+    
+    /// The factory for creating view controllers.
+    let viewcontrollerFactory: TSViewControllerFactoryProtocol
+    
+    /// Initializes the tab view controller with a view controller factory.
+    ///
+    /// - Parameter viewcontrollerFactory: The factory for creating view controllers.
+    init(viewcontrollerFactory: TSViewControllerFactoryProtocol) {
+        self.viewcontrollerFactory = viewcontrollerFactory
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configure()
     }
     
+    /// Configures the tab view controller.
     private func configure() {
-        view.backgroundColor = .purple
+        view.backgroundColor = AppStyle.Color.backgroundColor
         
         configureTabBarAppearance()
         
-        // TODO: Use factories here
-        let myFeedViewController = MyFeedViewController()
-        myFeedViewController.tabBarItem = UITabBarItem(title: "My Feed", image: UIImage.myFeed, tag: 0)
+        let myFeedViewModel = MyFeedViewModel()
+        let myFeedViewController = viewcontrollerFactory.createMyFeedViewController(viewModel: myFeedViewModel)
+        myFeedViewController.tabBarItem = UITabBarItem(title: "my_feed_tab_item_title".localized, image: UIImage.myFeed, tag: 0)
         
-        // TODO: Use factories here
-        let myProfileViewController = MyProfileViewController()
-        myProfileViewController.tabBarItem = UITabBarItem(title: "My Profile", image: UIImage.myProfile, tag: 1)
+        let myProfileViewModel = MyProfileViewModel()
+        let myProfileViewController = viewcontrollerFactory.createMyProfileViewController(viewModel: myProfileViewModel)
+        myProfileViewController.tabBarItem = UITabBarItem(title: "my_profile_tab_bar_title".localized, image: UIImage.myProfile, tag: 1)
         
         setViewControllers([myFeedViewController, myProfileViewController], animated: true)
-        
     }
     
+    /// Configures the appearance of the tab bar.
     private func configureTabBarAppearance() {
         // Create a custom tab bar appearance
         let tabBar = self.tabBar
-        tabBar.tintColor = UIColor.purple // Set the tint color
-        tabBar.barTintColor = UIColor.black // Set the background color
+        tabBar.tintColor = AppStyle.Color.primaryColor
+        tabBar.barTintColor = AppStyle.Color.backgroundColor
         
         // Shadow
         tabBar.layer.shadowColor = UIColor.gray.cgColor
@@ -49,3 +66,4 @@ final class TSTabViewController: UITabBarController {
     }
     
 }
+

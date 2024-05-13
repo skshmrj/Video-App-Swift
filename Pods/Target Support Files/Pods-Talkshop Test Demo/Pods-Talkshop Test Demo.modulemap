@@ -1,0 +1,6 @@
+framework module Pods_Talkshop_Test_Demo {
+  umbrella header "Pods-Talkshop Test Demo-umbrella.h"
+
+  export *
+  module * { export * }
+}
