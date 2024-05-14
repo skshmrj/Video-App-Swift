@@ -49,9 +49,11 @@ final class MyFeedViewModel: MyFeedProtocol {
 
     func connect(input: MyFeedViewModelConnection.Input) -> MyFeedViewModelConnection.Output {
         
+        let videoUrl = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+        
         let dS: [MyFeedDataSource.DataSource] = [
             .init(section: .main, rows: [
-                .myFeedCell(.init(title: "My First Cell"))
+                .myFeedCell(.init(videoUrl: .init(string: videoUrl), likesCount: 1))
             ])
         ]
         
