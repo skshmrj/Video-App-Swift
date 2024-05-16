@@ -6,8 +6,8 @@
 //
 
 import UIKit
-import AVKit
 import Alamofire
+import WebKit
 
 // Struct defining the content of a feed cell
 struct FeedCellContent: Hashable {
@@ -20,7 +20,7 @@ final class FeedCell: UICollectionViewCell {
     
     // MARK: - Properties
     
-    private var playerViewController: AVPlayerViewController?
+    private var webView: WKWebView?
     
     // UIView to contain the video player
     private let playerView: UIView = {
@@ -80,17 +80,29 @@ final class FeedCell: UICollectionViewCell {
         guard let videoUrl = content.videoUrl else {
             return
         }
-        let player = AVPlayer(url: videoUrl)
-        playerViewController = AVPlayerViewController()
-        playerViewController?.player = player
-        playerViewController?.showsPlaybackControls = true // Add this line
         
-        if let playerViewController = playerViewController {
-            playerView.addSubview(playerViewController.view)
-            playerViewController.view.frame = playerView.bounds
+        // Remove any existing web view
+        webView?.removeFromSuperview()
+        
+        // Initialize a new web view
+        webView = WKWebView(frame: .zero)
+        
+        if let webView = webView {
+            playerView.addSubview(webView)
+            webView.translatesAutoresizingMaskIntoConstraints = false
             
-            // Automatically play the video when the view is loaded
-            playerViewController.player?.play()
+            NSLayoutConstraint.activate([
+                webView.leadingAnchor.constraint(equalTo: playerView.leadingAnchor),
+                webView.trailingAnchor.constraint(equalTo: playerView.trailingAnchor),
+                webView.topAnchor.constraint(equalTo: playerView.topAnchor),
+                webView.bottomAnchor.constraint(equalTo: playerView.bottomAnchor)
+            ])
+            
+            let videoID = videoUrl.absoluteString.components(separatedBy: "=").last ?? ""
+            let embedURLString = "https://www.youtube.com/embed/\(videoID)"
+            if let embedURL = URL(string: embedURLString) {
+                webView.load(URLRequest(url: embedURL))
+            }
         }
         
         likesLabel.text = "\(content.likesCount ?? .zero) likes"
