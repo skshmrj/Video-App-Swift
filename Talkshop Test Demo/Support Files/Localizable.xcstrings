@@ -12,6 +12,17 @@
         }
       }
     },
+    "my_profile_my_posts_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "My Posts"
+          }
+        }
+      }
+    },
     "my_profile_tab_bar_title" : {
       "extractionState" : "manual",
       "localizations" : {

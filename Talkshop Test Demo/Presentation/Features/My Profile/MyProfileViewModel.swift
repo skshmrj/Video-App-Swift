@@ -12,9 +12,11 @@ import RxCocoa
 struct MyProfileDataSource {
     enum Section: Hashable {
         case main
+        case myPosts
     }
     
     enum Item: Hashable {
+        case myProfileOverview(ProfileOverviewContent)
         case myProfileFeedCell(ProfileFeedCellContent)
     }
     
@@ -65,7 +67,8 @@ final class MyProfileViewModel: MyProfileProtocol {
                 this.fetchPosts(userId: this.user.userId)
             }
             .subscribe(onNext: { [weak self] posts in
-                guard let dataSource = self?.generateDataSource(posts: posts) else {
+                guard let user = self?.user,
+                      let dataSource = self?.generateDataSource(posts: posts, user: user) else {
                     return
                 }
                 self?.dataSource.accept(dataSource)
@@ -78,9 +81,12 @@ final class MyProfileViewModel: MyProfileProtocol {
                                                    errorObservable: errorSubject.asObservable())
     }
     
-    func generateDataSource(posts: [Post]) -> [MyProfileDataSource.DataSource] {
+    func generateDataSource(posts: [Post], user: User) -> [MyProfileDataSource.DataSource] {
         let dS: [MyProfileDataSource.DataSource] = [
-            .init(section: .main, rows: posts.compactMap { post -> MyProfileDataSource.Item? in
+            .init(section: .main, rows: [
+                .myProfileOverview(.init(username: user.userName, image: user.userProfileImage))
+            ]),
+            .init(section: .myPosts, rows: posts.compactMap { post -> MyProfileDataSource.Item? in
                 guard let url = URL(string: post.videoUrl) else {
                     return nil
                 }

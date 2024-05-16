@@ -64,6 +64,7 @@ extension MyProfileViewController {
     private func bind() {
         collectionView.register(HeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderView")
         collectionView.register(ProfileFeedCell.self, forCellWithReuseIdentifier: "ProfileFeedCell")
+        collectionView.register(ProfileOverviewCell.self, forCellWithReuseIdentifier: "ProfileOverviewCell")
         
         bindDataSource()
         bindSupplementaryView()
@@ -104,6 +105,8 @@ extension MyProfileViewController {
             switch item {
             case let .myProfileFeedCell(content):
                 return self?.getProfileFeedCell(collectionView: collectionView, content: content, indexPath: indexPath)
+            case let .myProfileOverview(content):
+                return self?.getProfileFeedCell(collectionView: collectionView, content: content, indexPath: indexPath)
             }
         }
     }
@@ -114,38 +117,55 @@ extension MyProfileViewController {
     /// Creates the layout for the collection view.
     /// - Returns: The compositional layout for the collection view.
     private func createCollectionViewLayout() -> UICollectionViewCompositionalLayout {
-        // Define item size
-        let itemSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(0.5), // Two items per row
-            heightDimension: .fractionalHeight(1.0)
-        )
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        item.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
         
-        // Define group size
-        let groupSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1.0), // Full width of the section
-            heightDimension: .fractionalHeight(0.25) // Adjust as needed for your design
-        )
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item, item]) // Two items in the group
-        
-        // Define section header size
-        let headerSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1.0),
-            heightDimension: .absolute(75.0)
-        )
-        let header = NSCollectionLayoutBoundarySupplementaryItem(
-            layoutSize: headerSize,
-            elementKind: UICollectionView.elementKindSectionHeader,
-            alignment: .top
-        )
-        
-        // Create the section
-        let section = NSCollectionLayoutSection(group: group)
-        section.boundarySupplementaryItems = [header]
-        
-        // Create and return the layout
-        let layout = UICollectionViewCompositionalLayout(section: section)
+        let layout = UICollectionViewCompositionalLayout { [weak self] (sectionIndex, layoutEnvironment) -> NSCollectionLayoutSection? in
+            
+            guard let sectionType = self?.dataSource?.snapshot().sectionIdentifiers[sectionIndex] else {
+                return nil
+            }
+            
+            let group: NSCollectionLayoutGroup
+            
+            switch sectionType {
+            case .main:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                item.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
+                let groupSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1.0), // Full width of the section
+                    heightDimension: .fractionalHeight(0.20) // Adjust as needed for your design
+                )
+                group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+            case .myPosts:
+                let itemSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(0.5), // Two items per row
+                    heightDimension: .fractionalHeight(1.0)
+                )
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                item.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
+                let groupSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1.0), // Full width of the section
+                    heightDimension: .fractionalHeight(0.25) // Adjust as needed for your design
+                )
+                group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item, item])
+            }
+            
+            let headerSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .absolute(75.0)
+            )
+            let header = NSCollectionLayoutBoundarySupplementaryItem(
+                layoutSize: headerSize,
+                elementKind: UICollectionView.elementKindSectionHeader,
+                alignment: .top
+            )
+            
+            let section = NSCollectionLayoutSection(group: group)
+            section.boundarySupplementaryItems = [header]
+            
+            return section
+        }
+
         return layout
     }
 
@@ -163,13 +183,37 @@ extension MyProfileViewController {
         return cell
     }
     
+    private func getProfileFeedCell(collectionView: UICollectionView, content: ProfileOverviewContent, indexPath: IndexPath) -> ProfileOverviewCell? {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ProfileOverviewCell", for: indexPath) as? ProfileOverviewCell else {
+            return nil
+        }
+        cell.configure(content: content)
+        return cell
+    }
+    
     private func getHeaderView(indexPath: IndexPath) -> UICollectionReusableView? {
-        let headerView = collectionView.dequeueReusableSupplementaryView(
-            ofKind: UICollectionView.elementKindSectionHeader,
-            withReuseIdentifier: "HeaderView",
-            for: indexPath
-        ) as? HeaderView
-        headerView?.configure(title: "my_profile_tab_bar_title".localized)
-        return headerView
+        
+        guard let section = dataSource?.snapshot().sectionIdentifiers[indexPath.section] else {
+            return nil
+        }
+        
+        switch section {
+        case .main:
+            let headerView = collectionView.dequeueReusableSupplementaryView(
+                ofKind: UICollectionView.elementKindSectionHeader,
+                withReuseIdentifier: "HeaderView",
+                for: indexPath
+            ) as? HeaderView
+            headerView?.configure(title: "my_profile_tab_bar_title".localized)
+            return headerView
+        case .myPosts:
+            let headerView = collectionView.dequeueReusableSupplementaryView(
+                ofKind: UICollectionView.elementKindSectionHeader,
+                withReuseIdentifier: "HeaderView",
+                for: indexPath
+            ) as? HeaderView
+            headerView?.configure(title: "my_profile_my_posts_title".localized, textColor: .label, font: .systemFont(ofSize: 18, weight: .semibold))
+            return headerView
+        }
     }
 }

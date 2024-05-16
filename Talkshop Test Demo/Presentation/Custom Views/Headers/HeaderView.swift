@@ -42,7 +42,15 @@ private extension HeaderView {
 }
 
 extension HeaderView {
-    func configure(title: String) {
+    func configure(title: String, textColor: UIColor? = nil, font: UIFont? = nil) {
         titleLabel.text = title
+        
+        if let textColor = textColor {
+            titleLabel.textColor = textColor
+        }
+        
+        if let font = font {
+            titleLabel.font = font
+        }
     }
 }

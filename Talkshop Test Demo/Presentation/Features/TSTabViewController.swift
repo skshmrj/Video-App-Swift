@@ -60,7 +60,7 @@ final class TSTabViewController: UITabBarController {
         let myFeedViewController = viewcontrollerFactory.createMyFeedViewController(viewModel: myFeedViewModel)
         myFeedViewController.tabBarItem = UITabBarItem(title: "my_feed_tab_item_title".localized, image: UIImage.myFeed, tag: 0)
         
-        let myCurrentUser = User(userId: "user_A", userName: "Saksham", userProfileImageName: "")
+        let myCurrentUser = User(userId: "user_A", userName: "Saksham", userProfileImage: UIImage.displayPicture)
         let myProfileViewModel = viewModelFactory.createMyProfileViewModel(fetchPostsUseCase: fetchUseCase, user: myCurrentUser)
         let myProfileViewController = viewcontrollerFactory.createMyProfileViewController(viewModel: myProfileViewModel)
         myProfileViewController.tabBarItem = UITabBarItem(title: "my_profile_tab_bar_title".localized, image: UIImage.myProfile, tag: 1)

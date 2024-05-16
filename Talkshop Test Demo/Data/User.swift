@@ -5,10 +5,10 @@
 //  Created by Saksham Raj on 16/05/24.
 //
 
-import Foundation
+import UIKit
 
 struct User {
     let userId: String
     let userName: String
-    let userProfileImageName: String
+    let userProfileImage: UIImage
 }
