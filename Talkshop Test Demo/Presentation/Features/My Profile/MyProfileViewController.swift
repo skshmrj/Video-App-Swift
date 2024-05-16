@@ -62,8 +62,10 @@ extension MyProfileViewController {
     
     /// Binds view model outputs to the view.
     private func bind() {
+        collectionView.register(HeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderView")
         
         bindDataSource()
+        bindSupplementaryView()
         
         let output = viewModel.connect(input: .init())
         
@@ -82,6 +84,17 @@ extension MyProfileViewController {
                 this.dataSource?.apply(snapshot, animatingDifferences: false)
             })
             .disposed(by: disposeBag)
+    }
+    
+    private func bindSupplementaryView() {
+        dataSource?.supplementaryViewProvider = { [weak self] (_, kind: String, indexPath: IndexPath) -> UICollectionReusableView? in
+            switch kind {
+            case UICollectionView.elementKindSectionHeader:
+                return self?.getHeaderView(indexPath: indexPath)
+            default:
+                return nil
+            }
+        }
     }
     
     /// Sets up the data source for the collection view.
@@ -106,7 +119,15 @@ extension MyProfileViewController {
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(0.25))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
+        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(75.0))
+        let header = NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: headerSize,
+            elementKind: UICollectionView.elementKindSectionHeader,
+            alignment: .top
+        )
+        
         let section = NSCollectionLayoutSection(group: group)
+        section.boundarySupplementaryItems = [header]
         
         let layout = UICollectionViewCompositionalLayout(section: section)
         return layout
@@ -116,4 +137,14 @@ extension MyProfileViewController {
 // MARK: - Cell Configuration
 extension MyProfileViewController {
     // Additional methods for configuring cells can be added here if needed
+    
+    private func getHeaderView(indexPath: IndexPath) -> UICollectionReusableView? {
+        let headerView = collectionView.dequeueReusableSupplementaryView(
+            ofKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: "HeaderView",
+            for: indexPath
+        ) as? HeaderView
+        headerView?.configure(title: "my_profile_tab_bar_title".localized)
+        return headerView
+    }
 }

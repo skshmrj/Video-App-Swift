@@ -64,8 +64,10 @@ extension MyFeedViewController {
     /// Binds view model outputs to the view.
     private func bind() {
         collectionView.register(FeedCell.self, forCellWithReuseIdentifier: "FeedCell")
+        collectionView.register(HeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderView")
         
         bindDataSource()
+        bindSupplementaryView()
         
         let output = viewModel.connect(input: .init(isActiveObservable: .just(true)))
         
@@ -84,6 +86,17 @@ extension MyFeedViewController {
                 this.dataSource?.apply(snapshot, animatingDifferences: false)
             })
             .disposed(by: disposeBag)
+    }
+    
+    private func bindSupplementaryView() {
+        dataSource?.supplementaryViewProvider = { [weak self] (_, kind: String, indexPath: IndexPath) -> UICollectionReusableView? in
+            switch kind {
+            case UICollectionView.elementKindSectionHeader:
+                return self?.getHeaderView(indexPath: indexPath)
+            default:
+                return nil
+            }
+        }
     }
     
     /// Sets up the data source for the collection view.
@@ -106,10 +119,18 @@ extension MyFeedViewController {
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         item.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
         
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(0.33))
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(0.3))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
+        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(75.0))
+        let header = NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: headerSize,
+            elementKind: UICollectionView.elementKindSectionHeader,
+            alignment: .top
+        )
+        
         let section = NSCollectionLayoutSection(group: group)
+        section.boundarySupplementaryItems = [header]
         
         let layout = UICollectionViewCompositionalLayout(section: section)
         return layout
@@ -130,5 +151,15 @@ extension MyFeedViewController {
         }
         cell.configure(content: content)
         return cell
+    }
+    
+    private func getHeaderView(indexPath: IndexPath) -> UICollectionReusableView? {
+        let headerView = collectionView.dequeueReusableSupplementaryView(
+            ofKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: "HeaderView",
+            for: indexPath
+        ) as? HeaderView
+        headerView?.configure(title: "my_feed_tab_item_title".localized)
+        return headerView
     }
 }
