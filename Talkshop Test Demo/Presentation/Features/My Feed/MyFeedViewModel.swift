@@ -26,11 +26,12 @@ struct MyFeedDataSource {
 
 enum MyFeedViewModelConnection {
     struct Input {
-        
+        let isActiveObservable: Observable<Bool>
     }
     
     struct Output {
         let dataSource: Observable<[MyFeedDataSource.DataSource]>
+        let errorObservable: Observable<Error>
     }
 }
 
@@ -43,22 +44,54 @@ final class MyFeedViewModel: MyFeedProtocol {
     
     let dataSource = BehaviorRelay<[MyFeedDataSource.DataSource]>(value: [])
     
-    init() {
-        
+    let fetchPostsUseCase: FetchPostsUseCaseProtocol
+    
+    let disposeBag = DisposeBag()
+    
+    init(fetchPostsUseCase: FetchPostsUseCaseProtocol) {
+        self.fetchPostsUseCase = fetchPostsUseCase
     }
-
+    
     func connect(input: MyFeedViewModelConnection.Input) -> MyFeedViewModelConnection.Output {
         
-        let videoUrl = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+        let errorSubject = PublishSubject<Error>()
         
-        let dS: [MyFeedDataSource.DataSource] = [
-            .init(section: .main, rows: [
-                .myFeedCell(.init(videoUrl: .init(string: videoUrl), likesCount: 1))
-            ])
-        ]
+        input.isActiveObservable
+            .filter { $0 }
+            .flatMap { arg in
+                self.fetchPosts()
+            }
+            .subscribe(onNext: { [weak self] posts in
+                guard let dataSource = self?.generateDataSource(posts: posts) else {
+                    return
+                }
+                self?.dataSource.accept(dataSource)
+            }, onError: { error in
+                errorSubject.onNext(error)
+            })
+            .disposed(by: disposeBag)
         
-        dataSource.accept(dS)
-        
-        return MyFeedViewModelConnection.Output(dataSource: dataSource.debug("Rx:"))
+        return MyFeedViewModelConnection.Output(dataSource: dataSource.asObservable(),
+                                                errorObservable: errorSubject.asObservable())
     }
+    
+    func generateDataSource(posts: [Post]) -> [MyFeedDataSource.DataSource] {
+        let dS: [MyFeedDataSource.DataSource] = [
+            .init(section: .main, rows: posts.compactMap { post -> MyFeedDataSource.Item? in
+                guard let url = URL(string: post.videoUrl) else {
+                    return nil
+                }
+                return .myFeedCell(.init(videoUrl: url, likesCount: post.likeCount))
+            })
+        ]
+        return dS
+    }
+}
+
+extension MyFeedViewModel {
+    
+    func fetchPosts() -> Observable<[Post]> {
+        return fetchPostsUseCase.fetchPosts()
+    }
+    
 }

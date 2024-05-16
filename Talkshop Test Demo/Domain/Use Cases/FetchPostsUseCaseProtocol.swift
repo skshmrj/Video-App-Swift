@@ -5,4 +5,10 @@
 //  Created by Saksham Raj on 15/05/24.
 //
 
-import Foundation
+import RxSwift
+
+protocol FetchPostsUseCaseProtocol {
+    
+    func fetchPosts() -> Observable<[Post]>
+    
+}

@@ -8,7 +8,7 @@
 import RxSwift
 import Alamofire
 
-class PostRepository {
+struct PostRepository: PostsRepositoryProtocol {
     
     func fetchPosts() -> Observable<[Post]> {
         return Observable.create { observer in

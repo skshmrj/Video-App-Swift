@@ -7,6 +7,7 @@
 
 import UIKit
 import AVKit
+import Alamofire
 
 // Struct defining the content of a feed cell
 struct FeedCellContent: Hashable {

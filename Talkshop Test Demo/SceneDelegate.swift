@@ -19,7 +19,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         let viewcontrollerFactory = TSViewControllerFactory()
-        let tabBarVC = TSTabViewController(viewcontrollerFactory: viewcontrollerFactory)
+        let viewModelFactory = TSViewModelFactory()
+        let useCaseFactory = UseCaseFactory()
+        let repositoryFactory = RepositoryFactory()
+        let tabBarVC = TSTabViewController(
+            viewcontrollerFactory: viewcontrollerFactory,
+            viewModelFactory: viewModelFactory,
+            useCaseFactory: useCaseFactory,
+            repositoryFactory: repositoryFactory
+        )
         window = UIWindow(windowScene: windowScene)
         window?.rootViewController = tabBarVC
         window?.makeKeyAndVisible()

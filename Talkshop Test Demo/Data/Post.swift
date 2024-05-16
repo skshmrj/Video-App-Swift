@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+struct Post: Decodable {
+    let postId: String
+    let videoUrl: String
+    let thumbNailUrl: String
+    let username: String
+    let likeCount: Int
+}

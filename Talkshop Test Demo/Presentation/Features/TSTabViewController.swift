@@ -13,11 +13,29 @@ final class TSTabViewController: UITabBarController {
     /// The factory for creating view controllers.
     let viewcontrollerFactory: TSViewControllerFactoryProtocol
     
+    /// The factory for creating view models
+    let viewModelFactory: TSViewModelFactoryProtocol
+    
+    /// The factory for creating use cases
+    let useCaseFactory: UseCaseFactoryProtocol
+    
+    /// The factory for creating repositories
+    let repositoryFactory: RepositoryFactoryProtocol
+    
     /// Initializes the tab view controller with a view controller factory.
     ///
     /// - Parameter viewcontrollerFactory: The factory for creating view controllers.
-    init(viewcontrollerFactory: TSViewControllerFactoryProtocol) {
+    /// - Parameter viewModelFactory: The factory for creating view models
+    /// - Parameter useCaseFactory: The factory for creating use cases
+    /// - Parameter repositoryFactory: The factory for creating repositories
+    init(viewcontrollerFactory: TSViewControllerFactoryProtocol,
+         viewModelFactory: TSViewModelFactoryProtocol,
+         useCaseFactory: UseCaseFactoryProtocol,
+         repositoryFactory: RepositoryFactoryProtocol) {
         self.viewcontrollerFactory = viewcontrollerFactory
+        self.viewModelFactory = viewModelFactory
+        self.useCaseFactory = useCaseFactory
+        self.repositoryFactory = repositoryFactory
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -36,11 +54,13 @@ final class TSTabViewController: UITabBarController {
         
         configureTabBarAppearance()
         
-        let myFeedViewModel = MyFeedViewModel()
+        let postsRepositories = repositoryFactory.createPostsRepository()
+        let fetchUseCase = useCaseFactory.createFetchPostsUseCase(repository: postsRepositories)
+        let myFeedViewModel = viewModelFactory.createMyFeedViewModel(fetchPostsUseCase: fetchUseCase)
         let myFeedViewController = viewcontrollerFactory.createMyFeedViewController(viewModel: myFeedViewModel)
         myFeedViewController.tabBarItem = UITabBarItem(title: "my_feed_tab_item_title".localized, image: UIImage.myFeed, tag: 0)
         
-        let myProfileViewModel = MyProfileViewModel()
+        let myProfileViewModel = viewModelFactory.createMyProfileViewModel()
         let myProfileViewController = viewcontrollerFactory.createMyProfileViewController(viewModel: myProfileViewModel)
         myProfileViewController.tabBarItem = UITabBarItem(title: "my_profile_tab_bar_title".localized, image: UIImage.myProfile, tag: 1)
         

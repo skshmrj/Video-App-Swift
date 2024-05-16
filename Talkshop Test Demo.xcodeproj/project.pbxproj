@@ -24,6 +24,17 @@
 		4012F98F2BEFE03600BD5F0E /* Strings + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4012F98E2BEFE03600BD5F0E /* Strings + Extension.swift */; };
 		4012F9912BF0D0B400BD5F0E /* MyFeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4012F9902BF0D0B400BD5F0E /* MyFeedViewModel.swift */; };
 		4012F9932BF0D0C600BD5F0E /* MyProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4012F9922BF0D0C600BD5F0E /* MyProfileViewModel.swift */; };
+		4018E8262BF52F6600C2F8DA /* PostsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4018E8252BF52F6600C2F8DA /* PostsRepository.swift */; };
+		4018E8282BF52F8200C2F8DA /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4018E8272BF52F8200C2F8DA /* Post.swift */; };
+		4018E82D2BF5308900C2F8DA /* PostsRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4018E82C2BF5308900C2F8DA /* PostsRepositoryProtocol.swift */; };
+		4018E82F2BF530CE00C2F8DA /* FetchPostsUseCaseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4018E82E2BF530CE00C2F8DA /* FetchPostsUseCaseProtocol.swift */; };
+		4018E8312BF530F400C2F8DA /* FetchPostsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4018E8302BF530F400C2F8DA /* FetchPostsUseCase.swift */; };
+		4018E8332BF5315700C2F8DA /* UseCaseFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4018E8322BF5315700C2F8DA /* UseCaseFactoryProtocol.swift */; };
+		4018E8352BF5318F00C2F8DA /* UseCaseFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4018E8342BF5318F00C2F8DA /* UseCaseFactory.swift */; };
+		4018E8372BF531D200C2F8DA /* RepositoryFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4018E8362BF531D200C2F8DA /* RepositoryFactoryProtocol.swift */; };
+		4018E8392BF531F800C2F8DA /* RepositoryFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4018E8382BF531F800C2F8DA /* RepositoryFactory.swift */; };
+		4018E83B2BF532B400C2F8DA /* TSViewModelFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4018E83A2BF532B400C2F8DA /* TSViewModelFactoryProtocol.swift */; };
+		4018E83D2BF532C600C2F8DA /* TSViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4018E83C2BF532C600C2F8DA /* TSViewModelFactory.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +58,17 @@
 		4012F98E2BEFE03600BD5F0E /* Strings + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Strings + Extension.swift"; sourceTree = "<group>"; };
 		4012F9902BF0D0B400BD5F0E /* MyFeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFeedViewModel.swift; sourceTree = "<group>"; };
 		4012F9922BF0D0C600BD5F0E /* MyProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileViewModel.swift; sourceTree = "<group>"; };
+		4018E8252BF52F6600C2F8DA /* PostsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsRepository.swift; sourceTree = "<group>"; };
+		4018E8272BF52F8200C2F8DA /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
+		4018E82C2BF5308900C2F8DA /* PostsRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsRepositoryProtocol.swift; sourceTree = "<group>"; };
+		4018E82E2BF530CE00C2F8DA /* FetchPostsUseCaseProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchPostsUseCaseProtocol.swift; sourceTree = "<group>"; };
+		4018E8302BF530F400C2F8DA /* FetchPostsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchPostsUseCase.swift; sourceTree = "<group>"; };
+		4018E8322BF5315700C2F8DA /* UseCaseFactoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UseCaseFactoryProtocol.swift; sourceTree = "<group>"; };
+		4018E8342BF5318F00C2F8DA /* UseCaseFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UseCaseFactory.swift; sourceTree = "<group>"; };
+		4018E8362BF531D200C2F8DA /* RepositoryFactoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryFactoryProtocol.swift; sourceTree = "<group>"; };
+		4018E8382BF531F800C2F8DA /* RepositoryFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryFactory.swift; sourceTree = "<group>"; };
+		4018E83A2BF532B400C2F8DA /* TSViewModelFactoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TSViewModelFactoryProtocol.swift; sourceTree = "<group>"; };
+		4018E83C2BF532C600C2F8DA /* TSViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TSViewModelFactory.swift; sourceTree = "<group>"; };
 		5AFFC7DF8D89C3EFACA07FF9 /* Pods-Talkshop Test Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Talkshop Test Demo.debug.xcconfig"; path = "Target Support Files/Pods-Talkshop Test Demo/Pods-Talkshop Test Demo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -121,6 +143,7 @@
 		4012F97B2BEFD6C600BD5F0E /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				4018E8272BF52F8200C2F8DA /* Post.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -128,6 +151,9 @@
 		4012F97C2BEFD6CB00BD5F0E /* Domain */ = {
 			isa = PBXGroup;
 			children = (
+				4018E82B2BF5301C00C2F8DA /* Use Cases */,
+				4018E82A2BF5301300C2F8DA /* Repositories */,
+				4018E8292BF5300B00C2F8DA /* Entities */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -145,8 +171,10 @@
 		4012F97E2BEFD71300BD5F0E /* Factories */ = {
 			isa = PBXGroup;
 			children = (
-				4012F9852BEFD8D200BD5F0E /* TSViewControllerFactory.swift */,
-				4012F9872BEFD8F400BD5F0E /* TSViewControllerFactoryProtocol.swift */,
+				4018E8412BF5347700C2F8DA /* Repositories */,
+				4018E8402BF5346D00C2F8DA /* Use Cases */,
+				4018E83F2BF5346000C2F8DA /* View Model */,
+				4018E83E2BF5345500C2F8DA /* View Controller */,
 			);
 			path = Factories;
 			sourceTree = "<group>";
@@ -198,6 +226,67 @@
 				4012F98E2BEFE03600BD5F0E /* Strings + Extension.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		4018E8292BF5300B00C2F8DA /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Entities;
+			sourceTree = "<group>";
+		};
+		4018E82A2BF5301300C2F8DA /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				4018E8252BF52F6600C2F8DA /* PostsRepository.swift */,
+				4018E82C2BF5308900C2F8DA /* PostsRepositoryProtocol.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		4018E82B2BF5301C00C2F8DA /* Use Cases */ = {
+			isa = PBXGroup;
+			children = (
+				4018E82E2BF530CE00C2F8DA /* FetchPostsUseCaseProtocol.swift */,
+				4018E8302BF530F400C2F8DA /* FetchPostsUseCase.swift */,
+			);
+			path = "Use Cases";
+			sourceTree = "<group>";
+		};
+		4018E83E2BF5345500C2F8DA /* View Controller */ = {
+			isa = PBXGroup;
+			children = (
+				4012F9852BEFD8D200BD5F0E /* TSViewControllerFactory.swift */,
+				4012F9872BEFD8F400BD5F0E /* TSViewControllerFactoryProtocol.swift */,
+			);
+			path = "View Controller";
+			sourceTree = "<group>";
+		};
+		4018E83F2BF5346000C2F8DA /* View Model */ = {
+			isa = PBXGroup;
+			children = (
+				4018E83A2BF532B400C2F8DA /* TSViewModelFactoryProtocol.swift */,
+				4018E83C2BF532C600C2F8DA /* TSViewModelFactory.swift */,
+			);
+			path = "View Model";
+			sourceTree = "<group>";
+		};
+		4018E8402BF5346D00C2F8DA /* Use Cases */ = {
+			isa = PBXGroup;
+			children = (
+				4018E8322BF5315700C2F8DA /* UseCaseFactoryProtocol.swift */,
+				4018E8342BF5318F00C2F8DA /* UseCaseFactory.swift */,
+			);
+			path = "Use Cases";
+			sourceTree = "<group>";
+		};
+		4018E8412BF5347700C2F8DA /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				4018E8362BF531D200C2F8DA /* RepositoryFactoryProtocol.swift */,
+				4018E8382BF531F800C2F8DA /* RepositoryFactory.swift */,
+			);
+			path = Repositories;
 			sourceTree = "<group>";
 		};
 		E08043E90A5DC6171208BC87 /* Frameworks */ = {
@@ -333,17 +422,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4018E8372BF531D200C2F8DA /* RepositoryFactoryProtocol.swift in Sources */,
+				4018E83D2BF532C600C2F8DA /* TSViewModelFactory.swift in Sources */,
 				4012F9882BEFD8F400BD5F0E /* TSViewControllerFactoryProtocol.swift in Sources */,
+				4018E82D2BF5308900C2F8DA /* PostsRepositoryProtocol.swift in Sources */,
 				4012F9732BEFC06900BD5F0E /* MyProfileViewController.swift in Sources */,
 				4012F9862BEFD8D200BD5F0E /* TSViewControllerFactory.swift in Sources */,
+				4018E8332BF5315700C2F8DA /* UseCaseFactoryProtocol.swift in Sources */,
+				4018E8392BF531F800C2F8DA /* RepositoryFactory.swift in Sources */,
 				4012F96F2BEFBED200BD5F0E /* TSTabViewController.swift in Sources */,
 				4012F98F2BEFE03600BD5F0E /* Strings + Extension.swift in Sources */,
+				4018E8282BF52F8200C2F8DA /* Post.swift in Sources */,
+				4018E8262BF52F6600C2F8DA /* PostsRepository.swift in Sources */,
+				4018E82F2BF530CE00C2F8DA /* FetchPostsUseCaseProtocol.swift in Sources */,
+				4018E83B2BF532B400C2F8DA /* TSViewModelFactoryProtocol.swift in Sources */,
 				4012F95B2BEFBDA000BD5F0E /* AppDelegate.swift in Sources */,
 				4012F9912BF0D0B400BD5F0E /* MyFeedViewModel.swift in Sources */,
+				4018E8312BF530F400C2F8DA /* FetchPostsUseCase.swift in Sources */,
 				4012F9712BEFC05A00BD5F0E /* MyFeedViewController.swift in Sources */,
 				4012F98A2BEFDB2D00BD5F0E /* AppStyle.swift in Sources */,
 				4012F95D2BEFBDA000BD5F0E /* SceneDelegate.swift in Sources */,
 				4012F9932BF0D0C600BD5F0E /* MyProfileViewModel.swift in Sources */,
+				4018E8352BF5318F00C2F8DA /* UseCaseFactory.swift in Sources */,
 				4012F97A2BEFD31200BD5F0E /* FeedCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

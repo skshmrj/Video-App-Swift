@@ -67,7 +67,7 @@ extension MyFeedViewController {
         
         bindDataSource()
         
-        let output = viewModel.connect(input: .init())
+        let output = viewModel.connect(input: .init(isActiveObservable: .just(true)))
         
         output.dataSource
             .map { info -> NSDiffableDataSourceSnapshot in
