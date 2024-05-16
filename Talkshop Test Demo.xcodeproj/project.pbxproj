@@ -36,6 +36,8 @@
 		4018E83B2BF532B400C2F8DA /* TSViewModelFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4018E83A2BF532B400C2F8DA /* TSViewModelFactoryProtocol.swift */; };
 		4018E83D2BF532C600C2F8DA /* TSViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4018E83C2BF532C600C2F8DA /* TSViewModelFactory.swift */; };
 		4097C02E2BF64B38008FDE44 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4097C02D2BF64B38008FDE44 /* HeaderView.swift */; };
+		4097C0302BF665E6008FDE44 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4097C02F2BF665E6008FDE44 /* User.swift */; };
+		4097C0322BF667B4008FDE44 /* ProfileFeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4097C0312BF667B4008FDE44 /* ProfileFeedCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -71,6 +73,8 @@
 		4018E83A2BF532B400C2F8DA /* TSViewModelFactoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TSViewModelFactoryProtocol.swift; sourceTree = "<group>"; };
 		4018E83C2BF532C600C2F8DA /* TSViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TSViewModelFactory.swift; sourceTree = "<group>"; };
 		4097C02D2BF64B38008FDE44 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
+		4097C02F2BF665E6008FDE44 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		4097C0312BF667B4008FDE44 /* ProfileFeedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileFeedCell.swift; sourceTree = "<group>"; };
 		5AFFC7DF8D89C3EFACA07FF9 /* Pods-Talkshop Test Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Talkshop Test Demo.debug.xcconfig"; path = "Target Support Files/Pods-Talkshop Test Demo/Pods-Talkshop Test Demo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -131,6 +135,7 @@
 			isa = PBXGroup;
 			children = (
 				4012F9792BEFD31200BD5F0E /* FeedCell.swift */,
+				4097C0312BF667B4008FDE44 /* ProfileFeedCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -147,6 +152,7 @@
 			isa = PBXGroup;
 			children = (
 				4018E8272BF52F8200C2F8DA /* Post.swift */,
+				4097C02F2BF665E6008FDE44 /* User.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -428,6 +434,7 @@
 				4018E8372BF531D200C2F8DA /* RepositoryFactoryProtocol.swift in Sources */,
 				4018E83D2BF532C600C2F8DA /* TSViewModelFactory.swift in Sources */,
 				4012F9882BEFD8F400BD5F0E /* TSViewControllerFactoryProtocol.swift in Sources */,
+				4097C0302BF665E6008FDE44 /* User.swift in Sources */,
 				4018E82D2BF5308900C2F8DA /* PostsRepositoryProtocol.swift in Sources */,
 				4012F9732BEFC06900BD5F0E /* MyProfileViewController.swift in Sources */,
 				4012F9862BEFD8D200BD5F0E /* TSViewControllerFactory.swift in Sources */,
@@ -447,6 +454,7 @@
 				4012F95D2BEFBDA000BD5F0E /* SceneDelegate.swift in Sources */,
 				4012F9932BF0D0C600BD5F0E /* MyProfileViewModel.swift in Sources */,
 				4018E8352BF5318F00C2F8DA /* UseCaseFactory.swift in Sources */,
+				4097C0322BF667B4008FDE44 /* ProfileFeedCell.swift in Sources */,
 				4012F97A2BEFD31200BD5F0E /* FeedCell.swift in Sources */,
 				4097C02E2BF64B38008FDE44 /* HeaderView.swift in Sources */,
 			);

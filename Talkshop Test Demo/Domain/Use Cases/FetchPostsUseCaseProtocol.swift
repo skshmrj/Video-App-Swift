@@ -9,6 +9,6 @@ import RxSwift
 
 protocol FetchPostsUseCaseProtocol {
     
-    func fetchPosts() -> Observable<[Post]>
+    func fetchPosts(userId: String?) -> Observable<[Post]>
     
 }

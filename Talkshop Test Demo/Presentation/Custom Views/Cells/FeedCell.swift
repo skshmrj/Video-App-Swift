@@ -20,7 +20,11 @@ final class FeedCell: UICollectionViewCell {
     
     // MARK: - Properties
     
-    private var webView: WKWebView?
+    private var webView: WKWebView = {
+        let view = WKWebView(frame: .zero)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     
     // UIView to contain the video player
     private let playerView: UIView = {
@@ -56,10 +60,12 @@ final class FeedCell: UICollectionViewCell {
     
     // Set up the layout constraints
     private func layout() {
+        
         contentView.backgroundColor = AppStyle.Color.secondaryBackgroundColor
         
         contentView.addSubview(playerView)
         contentView.addSubview(likesLabel)
+        playerView.addSubview(webView)
         
         NSLayoutConstraint.activate([
             playerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: AppStyle.Spacing.default),
@@ -69,7 +75,12 @@ final class FeedCell: UICollectionViewCell {
             playerView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -AppStyle.Spacing.large),
             
             likesLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: AppStyle.Spacing.default),
-            likesLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -AppStyle.Spacing.small)
+            likesLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -AppStyle.Spacing.small),
+            
+            webView.leadingAnchor.constraint(equalTo: playerView.leadingAnchor),
+            webView.trailingAnchor.constraint(equalTo: playerView.trailingAnchor),
+            webView.topAnchor.constraint(equalTo: playerView.topAnchor),
+            webView.bottomAnchor.constraint(equalTo: playerView.bottomAnchor)
         ])
     }
     
@@ -81,28 +92,10 @@ final class FeedCell: UICollectionViewCell {
             return
         }
         
-        // Remove any existing web view
-        webView?.removeFromSuperview()
-        
-        // Initialize a new web view
-        webView = WKWebView(frame: .zero)
-        
-        if let webView = webView {
-            playerView.addSubview(webView)
-            webView.translatesAutoresizingMaskIntoConstraints = false
-            
-            NSLayoutConstraint.activate([
-                webView.leadingAnchor.constraint(equalTo: playerView.leadingAnchor),
-                webView.trailingAnchor.constraint(equalTo: playerView.trailingAnchor),
-                webView.topAnchor.constraint(equalTo: playerView.topAnchor),
-                webView.bottomAnchor.constraint(equalTo: playerView.bottomAnchor)
-            ])
-            
-            let videoID = videoUrl.absoluteString.components(separatedBy: "=").last ?? ""
-            let embedURLString = "https://www.youtube.com/embed/\(videoID)"
-            if let embedURL = URL(string: embedURLString) {
-                webView.load(URLRequest(url: embedURL))
-            }
+        let videoID = videoUrl.absoluteString.components(separatedBy: "=").last ?? ""
+        let embedURLString = "https://www.youtube.com/embed/\(videoID)"
+        if let embedURL = URL(string: embedURLString) {
+            webView.load(URLRequest(url: embedURL))
         }
         
         likesLabel.text = "\(content.likesCount ?? .zero) likes"

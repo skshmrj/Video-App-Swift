@@ -91,7 +91,7 @@ final class MyFeedViewModel: MyFeedProtocol {
 extension MyFeedViewModel {
     
     func fetchPosts() -> Observable<[Post]> {
-        return fetchPostsUseCase.fetchPosts()
+        return fetchPostsUseCase.fetchPosts(userId: nil)
     }
     
 }

@@ -7,6 +7,7 @@
 
 import Foundation
 import RxSwift
+import RxCocoa
 
 struct MyProfileDataSource {
     enum Section: Hashable {
@@ -14,7 +15,7 @@ struct MyProfileDataSource {
     }
     
     enum Item: Hashable {
-        
+        case myProfileFeedCell(ProfileFeedCellContent)
     }
     
     internal struct DataSource {
@@ -25,11 +26,12 @@ struct MyProfileDataSource {
 
 enum MyProfileViewModelConnection {
     struct Input {
-        
+        let isActiveObservable: Observable<Bool>
     }
     
     struct Output {
         let dataSource: Observable<[MyProfileDataSource.DataSource]>
+        let errorObservable: Observable<Error>
     }
 }
 
@@ -39,17 +41,61 @@ protocol MyProfileProtocol {
 
 final class MyProfileViewModel: MyProfileProtocol {
     
-    let dataSource = PublishSubject<[MyProfileDataSource.DataSource]>()
+    let dataSource = BehaviorRelay<[MyProfileDataSource.DataSource]>(value: [])
     
-    init() {
-        
+    let fetchPostsUseCase: FetchPostsUseCaseProtocol
+    
+    let disposeBag = DisposeBag()
+    
+    let user: User
+    
+    init(fetchPostsUseCase: FetchPostsUseCaseProtocol, user: User) {
+        self.fetchPostsUseCase = fetchPostsUseCase
+        self.user = user
     }
     
     func connect(input: MyProfileViewModelConnection.Input) -> MyProfileViewModelConnection.Output {
-        let dS: [MyProfileDataSource.DataSource] = []
         
-        dataSource.onNext(dS)
+        let errorSubject = PublishSubject<Error>()
         
-        return MyProfileViewModelConnection.Output(dataSource: dataSource.debug("Rx:"))
+        input.isActiveObservable
+            .filter { $0 }
+            .withUnretained(self)
+            .flatMap { this, arg in
+                this.fetchPosts(userId: this.user.userId)
+            }
+            .subscribe(onNext: { [weak self] posts in
+                guard let dataSource = self?.generateDataSource(posts: posts) else {
+                    return
+                }
+                self?.dataSource.accept(dataSource)
+            }, onError: { error in
+                errorSubject.onNext(error)
+            })
+            .disposed(by: disposeBag)
+        
+        return MyProfileViewModelConnection.Output(dataSource: dataSource.asObservable(),
+                                                   errorObservable: errorSubject.asObservable())
+    }
+    
+    func generateDataSource(posts: [Post]) -> [MyProfileDataSource.DataSource] {
+        let dS: [MyProfileDataSource.DataSource] = [
+            .init(section: .main, rows: posts.compactMap { post -> MyProfileDataSource.Item? in
+                guard let url = URL(string: post.videoUrl) else {
+                    return nil
+                }
+                return .myProfileFeedCell(.init(videoUrl: url))
+            })
+        ]
+        return dS
     }
 }
+
+extension MyProfileViewModel {
+    
+    func fetchPosts(userId: String) -> Observable<[Post]> {
+        return fetchPostsUseCase.fetchPosts(userId: userId)
+    }
+    
+}
+

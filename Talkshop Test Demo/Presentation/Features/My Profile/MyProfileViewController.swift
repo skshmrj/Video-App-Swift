@@ -63,11 +63,12 @@ extension MyProfileViewController {
     /// Binds view model outputs to the view.
     private func bind() {
         collectionView.register(HeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderView")
+        collectionView.register(ProfileFeedCell.self, forCellWithReuseIdentifier: "ProfileFeedCell")
         
         bindDataSource()
         bindSupplementaryView()
         
-        let output = viewModel.connect(input: .init())
+        let output = viewModel.connect(input: .init(isActiveObservable: .just(true)))
         
         output.dataSource
             .map { info -> NSDiffableDataSourceSnapshot in
@@ -101,7 +102,8 @@ extension MyProfileViewController {
     private func bindDataSource() {
         dataSource = UICollectionViewDiffableDataSource<MyProfileDataSource.Section, MyProfileDataSource.Item>(collectionView: collectionView) { [weak self] collectionView, indexPath, item in
             switch item {
-                // Case handling for different types of items in the data source can be added here
+            case let .myProfileFeedCell(content):
+                return self?.getProfileFeedCell(collectionView: collectionView, content: content, indexPath: indexPath)
             }
         }
     }
@@ -112,31 +114,54 @@ extension MyProfileViewController {
     /// Creates the layout for the collection view.
     /// - Returns: The compositional layout for the collection view.
     private func createCollectionViewLayout() -> UICollectionViewCompositionalLayout {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
+        // Define item size
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(0.5), // Two items per row
+            heightDimension: .fractionalHeight(1.0)
+        )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         item.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
         
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(0.25))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        // Define group size
+        let groupSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0), // Full width of the section
+            heightDimension: .fractionalHeight(0.25) // Adjust as needed for your design
+        )
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item, item]) // Two items in the group
         
-        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(75.0))
+        // Define section header size
+        let headerSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .absolute(75.0)
+        )
         let header = NSCollectionLayoutBoundarySupplementaryItem(
             layoutSize: headerSize,
             elementKind: UICollectionView.elementKindSectionHeader,
             alignment: .top
         )
         
+        // Create the section
         let section = NSCollectionLayoutSection(group: group)
         section.boundarySupplementaryItems = [header]
         
+        // Create and return the layout
         let layout = UICollectionViewCompositionalLayout(section: section)
         return layout
     }
+
 }
 
 // MARK: - Cell Configuration
 extension MyProfileViewController {
     // Additional methods for configuring cells can be added here if needed
+    
+    private func getProfileFeedCell(collectionView: UICollectionView, content: ProfileFeedCellContent, indexPath: IndexPath) -> ProfileFeedCell? {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ProfileFeedCell", for: indexPath) as? ProfileFeedCell else {
+            return nil
+        }
+        cell.configure(content: content)
+        return cell
+    }
     
     private func getHeaderView(indexPath: IndexPath) -> UICollectionReusableView? {
         let headerView = collectionView.dequeueReusableSupplementaryView(

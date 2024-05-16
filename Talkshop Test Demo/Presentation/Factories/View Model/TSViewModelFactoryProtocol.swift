@@ -9,5 +9,5 @@ import Foundation
 
 protocol TSViewModelFactoryProtocol {
     func createMyFeedViewModel(fetchPostsUseCase: FetchPostsUseCaseProtocol) -> MyFeedProtocol
-    func createMyProfileViewModel() -> MyProfileProtocol
+    func createMyProfileViewModel(fetchPostsUseCase: FetchPostsUseCaseProtocol, user: User) -> MyProfileProtocol
 }

@@ -12,10 +12,8 @@ struct TSViewModelFactory: TSViewModelFactoryProtocol {
         MyFeedViewModel(fetchPostsUseCase: fetchPostsUseCase)
     }
     
-    func createMyProfileViewModel() -> MyProfileProtocol {
-        MyProfileViewModel()
+    func createMyProfileViewModel(fetchPostsUseCase: FetchPostsUseCaseProtocol, user: User) -> MyProfileProtocol {
+        MyProfileViewModel(fetchPostsUseCase: fetchPostsUseCase, user: user)
     }
-    
-    
 }
  
