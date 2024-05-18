@@ -14,6 +14,8 @@ struct ProfileOverviewContent: Hashable {
 
 final class ProfileOverviewCell: UICollectionViewCell {
     
+    static let reuseIdentifier = "ProfileOverviewCell"
+    
     struct Constants {
         static let imageHeight: CGFloat = 50.0
         static let imageWidth: CGFloat = 50.0

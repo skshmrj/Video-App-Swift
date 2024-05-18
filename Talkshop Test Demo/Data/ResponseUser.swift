@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct ResponseUser {
+struct ResponseUser: Decodable {
     let userId: String
     let userName: String
     let thumbnailUrl: String

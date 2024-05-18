@@ -24,12 +24,26 @@ final class MyProfileViewController: UIViewController {
     /// Dispose bag for RxSwift subscriptions.
     private let disposeBag = DisposeBag()
     
+    private let isActiveObservable = PublishSubject<Bool>()
+    
     /// Collection view for displaying the user profile information.
     private lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: createCollectionViewLayout())
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = AppStyle.Color.backgroundColor
         return collectionView
+    }()
+    
+    let refreshControl = UIRefreshControl()
+    
+    
+    lazy var closeButton: UIButton = {
+        let view = UIButton()
+        view.setImage(UIImage.close, for: .normal)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.tintColor = AppStyle.Color.primaryColor
+        view.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+        return view
     }()
     
     /// Initializes the view controller with a view model.
@@ -49,6 +63,10 @@ final class MyProfileViewController: UIViewController {
         layout()
         bind()
     }
+    
+    @objc func closeButtonTapped() {
+        dismiss(animated: true, completion: nil)
+    }
 }
 
 // MARK: - Private Methods
@@ -56,7 +74,18 @@ extension MyProfileViewController {
     /// Sets up the layout constraints for the collection view.
     private func layout() {
         view.addSubview(collectionView)
+        view.addSubview(closeButton)
+        
+        collectionView.refreshControl = refreshControl
+        
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+        
+        closeButton.isHidden = presentingViewController == nil
+        
         NSLayoutConstraint.activate([
+            closeButton.topAnchor.constraint(equalTo: view.topAnchor, constant: AppStyle.Spacing.medium),
+            closeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -AppStyle.Spacing.medium),
+            
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
@@ -64,16 +93,26 @@ extension MyProfileViewController {
         ])
     }
     
+    @objc private func refreshData() {
+        // For demonstration purposes, we'll wait 2 seconds and then end refreshing
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
+            self?.isActiveObservable.onNext(true)
+        }
+        
+    }
+    
     /// Binds view model outputs to the view.
     private func bind() {
-        collectionView.register(HeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderView")
+        collectionView.register(HeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HeaderView.reuseIdentifier)
         collectionView.register(FeedCell.self, forCellWithReuseIdentifier: FeedCell.reuseIdentifier)
-        collectionView.register(ProfileOverviewCell.self, forCellWithReuseIdentifier: "ProfileOverviewCell")
+        collectionView.register(ProfileOverviewCell.self, forCellWithReuseIdentifier: ProfileOverviewCell.reuseIdentifier)
         
         bindDataSource()
         bindSupplementaryView()
         
-        let output = viewModel.connect(input: .init(isActiveObservable: .just(true)))
+        let output = viewModel.connect(input: .init(isActiveObservable: isActiveObservable))
+        
+        isActiveObservable.onNext(true)
         
         output.dataSource
             .map { info -> NSDiffableDataSourceSnapshot in
@@ -87,6 +126,7 @@ extension MyProfileViewController {
             .observe(on: MainScheduler.instance)
             .withUnretained(self)
             .subscribe(onNext: { this, snapshot in
+                this.refreshControl.endRefreshing()
                 this.dataSource?.apply(snapshot, animatingDifferences: false)
             })
             .disposed(by: disposeBag)
@@ -190,7 +230,7 @@ extension MyProfileViewController {
     }
     
     private func getProfileOverviewCell(collectionView: UICollectionView, content: ProfileOverviewContent, indexPath: IndexPath) -> ProfileOverviewCell? {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ProfileOverviewCell", for: indexPath) as? ProfileOverviewCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileOverviewCell.reuseIdentifier, for: indexPath) as? ProfileOverviewCell else {
             return nil
         }
         cell.configure(content: content)
@@ -204,18 +244,18 @@ extension MyProfileViewController {
         }
         
         switch section {
-        case .main:
+        case let .main(title):
             let headerView = collectionView.dequeueReusableSupplementaryView(
                 ofKind: UICollectionView.elementKindSectionHeader,
-                withReuseIdentifier: "HeaderView",
+                withReuseIdentifier: HeaderView.reuseIdentifier,
                 for: indexPath
             ) as? HeaderView
-            headerView?.configure(title: "my_profile_tab_bar_title".localized)
+            headerView?.configure(title: title)
             return headerView
         case .myPosts:
             let headerView = collectionView.dequeueReusableSupplementaryView(
                 ofKind: UICollectionView.elementKindSectionHeader,
-                withReuseIdentifier: "HeaderView",
+                withReuseIdentifier: HeaderView.reuseIdentifier,
                 for: indexPath
             ) as? HeaderView
             headerView?.configure(title: "my_profile_my_posts_title".localized, font: AppStyle.Font.title)

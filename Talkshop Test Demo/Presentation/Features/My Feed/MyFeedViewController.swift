@@ -24,6 +24,8 @@ final class MyFeedViewController: UIViewController {
     /// The data source for the collection view.
     private var dataSource: UICollectionViewDiffableDataSource<MyFeedDataSource.Section, MyFeedDataSource.Item>?
     
+    private let isActiveObservable = PublishSubject<Bool>()
+    
     /// Dispose bag for RxSwift subscriptions.
     private let disposeBag = DisposeBag()
     
@@ -34,6 +36,8 @@ final class MyFeedViewController: UIViewController {
         collectionView.backgroundColor = AppStyle.Color.backgroundColor
         return collectionView
     }()
+    
+    let refreshControl = UIRefreshControl()
     
     /// Initializes the view controller with a view model.
     /// - Parameter viewModel: The view model for the feed.
@@ -60,12 +64,24 @@ extension MyFeedViewController {
     /// Sets up the layout constraints for the collection view.
     private func layout() {
         view.addSubview(collectionView)
+        collectionView.refreshControl = refreshControl
+        
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+        
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
         ])
+    }
+    
+    @objc private func refreshData() {
+        // For demonstration purposes, we'll wait 2 seconds and then end refreshing
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
+            self?.isActiveObservable.onNext(true)
+        }
+        
     }
     
     /// Binds view model outputs to the view.
@@ -76,7 +92,9 @@ extension MyFeedViewController {
         bindDataSource()
         bindSupplementaryView()
         
-        let output = viewModel.connect(input: .init(isActiveObservable: .just(true)))
+        let output = viewModel.connect(input: .init(isActiveObservable: isActiveObservable))
+        
+        isActiveObservable.onNext(true)
         
         output.dataSource
             .map { info -> NSDiffableDataSourceSnapshot in
@@ -90,6 +108,7 @@ extension MyFeedViewController {
             .observe(on: MainScheduler.instance)
             .withUnretained(self)
             .subscribe(onNext: { this, snapshot in
+                this.refreshControl.endRefreshing()
                 this.dataSource?.apply(snapshot, animatingDifferences: false)
             })
             .disposed(by: disposeBag)
@@ -162,16 +181,17 @@ extension MyFeedViewController {
         let output = cell.connect(.init())
         
         output.authorButtonTapObservable
-            .subscribe(onNext: {
+            .withUnretained(self)
+            .subscribe(onNext: { this, _ in
                 guard let user = content.contributorContent?.user else {
                     return
                 }
-                // Navigate to user page
-                let postRepository = PostRepository()
-                let fetchPostUseCase = FetchPostsUseCase(repository: postRepository)
-                let myProfileViewModel = MyProfileViewModel(fetchPostsUseCase: fetchPostUseCase, user: user)
-                let myProfileViewController = MyProfileViewController(viewModel: myProfileViewModel)
-                self.present(myProfileViewController, animated: true, completion: nil)
+                let fetchPostsUseCase = this.mainFactory.useCaseFactory.createFetchPostsUseCase(
+                    repository: this.mainFactory.repositoryFactory.createPostsRepository()
+                )
+                let viewModel = this.mainFactory.viewModelFactory.createMyProfileViewModel(fetchPostsUseCase: fetchPostsUseCase, user: user)
+                let viewController = this.mainFactory.viewControllerFactory.createMyProfileViewController(viewModel: viewModel)
+                self.present(viewController, animated: true, completion: nil)
             })
             .disposed(by: output.disposeBag)
         

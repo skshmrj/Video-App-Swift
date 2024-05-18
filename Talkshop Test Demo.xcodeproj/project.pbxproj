@@ -44,6 +44,10 @@
 		40DC77492BF8FAB900025AC9 /* UserMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40DC77482BF8FAB900025AC9 /* UserMapper.swift */; };
 		40DC774B2BF8FF2F00025AC9 /* MainFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40DC774A2BF8FF2F00025AC9 /* MainFactoryProtocol.swift */; };
 		40DC774D2BF8FF3700025AC9 /* MainFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40DC774C2BF8FF3700025AC9 /* MainFactory.swift */; };
+		40DC77532BF915FB00025AC9 /* UsersRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40DC77522BF915FB00025AC9 /* UsersRepositoryProtocol.swift */; };
+		40DC77552BF9161700025AC9 /* UsersRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40DC77542BF9161700025AC9 /* UsersRepository.swift */; };
+		40DC77572BF9162A00025AC9 /* FetchUsersUseCaseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40DC77562BF9162A00025AC9 /* FetchUsersUseCaseProtocol.swift */; };
+		40DC77592BF9163500025AC9 /* FetchUsersUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40DC77582BF9163500025AC9 /* FetchUsersUseCase.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -87,6 +91,10 @@
 		40DC77482BF8FAB900025AC9 /* UserMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMapper.swift; sourceTree = "<group>"; };
 		40DC774A2BF8FF2F00025AC9 /* MainFactoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainFactoryProtocol.swift; sourceTree = "<group>"; };
 		40DC774C2BF8FF3700025AC9 /* MainFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainFactory.swift; sourceTree = "<group>"; };
+		40DC77522BF915FB00025AC9 /* UsersRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersRepositoryProtocol.swift; sourceTree = "<group>"; };
+		40DC77542BF9161700025AC9 /* UsersRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersRepository.swift; sourceTree = "<group>"; };
+		40DC77562BF9162A00025AC9 /* FetchUsersUseCaseProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchUsersUseCaseProtocol.swift; sourceTree = "<group>"; };
+		40DC77582BF9163500025AC9 /* FetchUsersUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchUsersUseCase.swift; sourceTree = "<group>"; };
 		5AFFC7DF8D89C3EFACA07FF9 /* Pods-Talkshop Test Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Talkshop Test Demo.debug.xcconfig"; path = "Target Support Files/Pods-Talkshop Test Demo/Pods-Talkshop Test Demo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -264,8 +272,8 @@
 		4018E82A2BF5301300C2F8DA /* Repositories */ = {
 			isa = PBXGroup;
 			children = (
-				4018E8252BF52F6600C2F8DA /* PostsRepository.swift */,
-				4018E82C2BF5308900C2F8DA /* PostsRepositoryProtocol.swift */,
+				40DC77512BF915E700025AC9 /* Users */,
+				40DC774E2BF915CA00025AC9 /* Posts */,
 			);
 			path = Repositories;
 			sourceTree = "<group>";
@@ -273,8 +281,8 @@
 		4018E82B2BF5301C00C2F8DA /* Use Cases */ = {
 			isa = PBXGroup;
 			children = (
-				4018E82E2BF530CE00C2F8DA /* FetchPostsUseCaseProtocol.swift */,
-				4018E8302BF530F400C2F8DA /* FetchPostsUseCase.swift */,
+				40DC77502BF915DE00025AC9 /* Users */,
+				40DC774F2BF915D300025AC9 /* Posts */,
 			);
 			path = "Use Cases";
 			sourceTree = "<group>";
@@ -322,6 +330,42 @@
 				40DC77482BF8FAB900025AC9 /* UserMapper.swift */,
 			);
 			path = Mapper;
+			sourceTree = "<group>";
+		};
+		40DC774E2BF915CA00025AC9 /* Posts */ = {
+			isa = PBXGroup;
+			children = (
+				4018E8252BF52F6600C2F8DA /* PostsRepository.swift */,
+				4018E82C2BF5308900C2F8DA /* PostsRepositoryProtocol.swift */,
+			);
+			path = Posts;
+			sourceTree = "<group>";
+		};
+		40DC774F2BF915D300025AC9 /* Posts */ = {
+			isa = PBXGroup;
+			children = (
+				4018E82E2BF530CE00C2F8DA /* FetchPostsUseCaseProtocol.swift */,
+				4018E8302BF530F400C2F8DA /* FetchPostsUseCase.swift */,
+			);
+			path = Posts;
+			sourceTree = "<group>";
+		};
+		40DC77502BF915DE00025AC9 /* Users */ = {
+			isa = PBXGroup;
+			children = (
+				40DC77562BF9162A00025AC9 /* FetchUsersUseCaseProtocol.swift */,
+				40DC77582BF9163500025AC9 /* FetchUsersUseCase.swift */,
+			);
+			path = Users;
+			sourceTree = "<group>";
+		};
+		40DC77512BF915E700025AC9 /* Users */ = {
+			isa = PBXGroup;
+			children = (
+				40DC77522BF915FB00025AC9 /* UsersRepositoryProtocol.swift */,
+				40DC77542BF9161700025AC9 /* UsersRepository.swift */,
+			);
+			path = Users;
 			sourceTree = "<group>";
 		};
 		E08043E90A5DC6171208BC87 /* Frameworks */ = {
@@ -467,6 +511,8 @@
 				4018E8332BF5315700C2F8DA /* UseCaseFactoryProtocol.swift in Sources */,
 				40DC77472BF8FAB100025AC9 /* PostMapper.swift in Sources */,
 				40DC774D2BF8FF3700025AC9 /* MainFactory.swift in Sources */,
+				40DC77532BF915FB00025AC9 /* UsersRepositoryProtocol.swift in Sources */,
+				40DC77592BF9163500025AC9 /* FetchUsersUseCase.swift in Sources */,
 				4018E8392BF531F800C2F8DA /* RepositoryFactory.swift in Sources */,
 				4012F96F2BEFBED200BD5F0E /* TSTabViewController.swift in Sources */,
 				4012F98F2BEFE03600BD5F0E /* Strings + Extension.swift in Sources */,
@@ -477,7 +523,9 @@
 				4012F95B2BEFBDA000BD5F0E /* AppDelegate.swift in Sources */,
 				4012F9912BF0D0B400BD5F0E /* MyFeedViewModel.swift in Sources */,
 				4018E8312BF530F400C2F8DA /* FetchPostsUseCase.swift in Sources */,
+				40DC77572BF9162A00025AC9 /* FetchUsersUseCaseProtocol.swift in Sources */,
 				4012F9712BEFC05A00BD5F0E /* MyFeedViewController.swift in Sources */,
+				40DC77552BF9161700025AC9 /* UsersRepository.swift in Sources */,
 				4012F98A2BEFDB2D00BD5F0E /* AppStyle.swift in Sources */,
 				40DC77492BF8FAB900025AC9 /* UserMapper.swift in Sources */,
 				40DC774B2BF8FF2F00025AC9 /* MainFactoryProtocol.swift in Sources */,

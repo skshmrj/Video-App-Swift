@@ -11,7 +11,7 @@ import RxCocoa
 
 struct MyProfileDataSource {
     enum Section: Hashable {
-        case main
+        case main(String)
         case myPosts
     }
     
@@ -82,9 +82,17 @@ final class MyProfileViewModel: MyProfileProtocol {
     }
     
     func generateDataSource(posts: [Post], user: User) -> [MyProfileDataSource.DataSource] {
+        let userName = user.userId != User.currentUser.userId
+        ? user.userName
+        : "my_profile_tab_bar_title".localized
+        
+        let userImage = user.userId != User.currentUser.userId
+        ? UIImage.otherUsers
+        : user.userImage ?? UIImage.displayPicture
+        
         let dS: [MyProfileDataSource.DataSource] = [
-            .init(section: .main, rows: [
-                .myProfileOverview(.init(username: user.userName, image: user.userImage ?? UIImage.displayPicture))
+            .init(section: .main(userName), rows: [
+                .myProfileOverview(.init(username: user.userName, image: userImage))
             ]),
             .init(section: .myPosts, rows: posts.compactMap { post -> MyProfileDataSource.Item? in
                 guard let url = URL(string: post.videoUrl) else {

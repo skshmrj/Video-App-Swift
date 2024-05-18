@@ -12,3 +12,10 @@ struct User: Hashable {
     let userName: String
     let userImage: UIImage?
 }
+
+
+extension User {
+    
+    static let currentUser = User(userId: "user_A", userName: "Nico Robin", userImage: UIImage.displayPicture)
+    
+}
