@@ -10,32 +10,14 @@ import UIKit
 /// A custom tab view controller for Talkshop Test Demo app.
 final class TSTabViewController: UITabBarController {
     
-    /// The factory for creating view controllers.
-    let viewcontrollerFactory: TSViewControllerFactoryProtocol
-    
-    /// The factory for creating view models
-    let viewModelFactory: TSViewModelFactoryProtocol
-    
-    /// The factory for creating use cases
-    let useCaseFactory: UseCaseFactoryProtocol
-    
-    /// The factory for creating repositories
-    let repositoryFactory: RepositoryFactoryProtocol
+    /// The factory for creating other factories
+    let mainFactory: MainFactoryProtocol
     
     /// Initializes the tab view controller with a view controller factory.
     ///
-    /// - Parameter viewcontrollerFactory: The factory for creating view controllers.
-    /// - Parameter viewModelFactory: The factory for creating view models
-    /// - Parameter useCaseFactory: The factory for creating use cases
-    /// - Parameter repositoryFactory: The factory for creating repositories
-    init(viewcontrollerFactory: TSViewControllerFactoryProtocol,
-         viewModelFactory: TSViewModelFactoryProtocol,
-         useCaseFactory: UseCaseFactoryProtocol,
-         repositoryFactory: RepositoryFactoryProtocol) {
-        self.viewcontrollerFactory = viewcontrollerFactory
-        self.viewModelFactory = viewModelFactory
-        self.useCaseFactory = useCaseFactory
-        self.repositoryFactory = repositoryFactory
+    /// - Parameter mainFactory: The factory for creating other factories
+    init(mainFactory: MainFactoryProtocol) {
+        self.mainFactory = mainFactory
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -54,13 +36,16 @@ final class TSTabViewController: UITabBarController {
         
         configureTabBarAppearance()
         
-        let postsRepositories = repositoryFactory.createPostsRepository()
-        let fetchUseCase = useCaseFactory.createFetchPostsUseCase(repository: postsRepositories)
+        let viewModelFactory = mainFactory.viewModelFactory
+        let viewcontrollerFactory = mainFactory.viewControllerFactory
+        
+        let postsRepositories = mainFactory.repositoryFactory.createPostsRepository()
+        let fetchUseCase = mainFactory.useCaseFactory.createFetchPostsUseCase(repository: postsRepositories)
         let myFeedViewModel = viewModelFactory.createMyFeedViewModel(fetchPostsUseCase: fetchUseCase)
-        let myFeedViewController = viewcontrollerFactory.createMyFeedViewController(viewModel: myFeedViewModel)
+        let myFeedViewController = viewcontrollerFactory.createMyFeedViewController(viewModel: myFeedViewModel, mainFactory: mainFactory)
         myFeedViewController.tabBarItem = UITabBarItem(title: "", image: UIImage.myFeed, tag: 0)
         
-        let myCurrentUser = User(userId: "user_A", userName: "Nico Robin", userProfileImage: UIImage.displayPicture)
+        let myCurrentUser = User(userId: "user_A", userName: "Nico Robin", userImage: UIImage.displayPicture)
         let myProfileViewModel = viewModelFactory.createMyProfileViewModel(fetchPostsUseCase: fetchUseCase, user: myCurrentUser)
         let myProfileViewController = viewcontrollerFactory.createMyProfileViewController(viewModel: myProfileViewModel)
         myProfileViewController.tabBarItem = UITabBarItem(title: "", image: UIImage.myProfile, tag: 1)

@@ -6,3 +6,23 @@
 //
 
 import Foundation
+
+final class MainFactory: MainFactoryProtocol {
+    
+    lazy var repositoryFactory: RepositoryFactoryProtocol = {
+        RepositoryFactory()
+    }()
+    
+    lazy var useCaseFactory: UseCaseFactoryProtocol = {
+        UseCaseFactory()
+    }()
+    
+    lazy var viewModelFactory: TSViewModelFactoryProtocol = {
+        TSViewModelFactory()
+    }()
+    
+    lazy var viewControllerFactory: TSViewControllerFactoryProtocol = {
+        TSViewControllerFactory()
+    }()
+}
+

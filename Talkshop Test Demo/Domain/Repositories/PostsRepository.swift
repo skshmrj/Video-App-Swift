@@ -10,11 +10,11 @@ import Alamofire
 
 struct PostRepository: PostsRepositoryProtocol {
     
-    func fetchPosts() -> Observable<[Post]> {
+    func fetchPosts() -> Observable<[ResponsePost]> {
         return Observable.create { observer in
             let url = "https://jsonplaceholder.typicode.com/posts"
             
-            let request = AF.request(url).responseDecodable(of: [Post].self) { response in
+            let request = AF.request(url).responseDecodable(of: [ResponsePost].self) { response in
                 switch response.result {
                 case .success(let posts):
                     observer.onNext(posts)

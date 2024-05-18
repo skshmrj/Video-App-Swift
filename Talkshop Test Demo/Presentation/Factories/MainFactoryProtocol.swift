@@ -6,3 +6,14 @@
 //
 
 import Foundation
+
+protocol MainFactoryProtocol {
+    
+    var repositoryFactory: RepositoryFactoryProtocol { get }
+    
+    var useCaseFactory: UseCaseFactoryProtocol { get }
+    
+    var viewModelFactory: TSViewModelFactoryProtocol { get }
+    
+    var viewControllerFactory: TSViewControllerFactoryProtocol { get }
+}

@@ -8,10 +8,17 @@
 import UIKit
 import Alamofire
 import WebKit
+import RxSwift
+import RxCocoa
 
 // Struct defining the content of a feed cell
 struct FeedCellContent: Hashable {
     let videoUrl: URL?     // URL of the video
+    let contributorContent: ContributorViewContent?
+}
+
+struct ContributorViewContent: Hashable {
+    let user: User?
     let likesCount: Int?   // Number of likes for the video
 }
 
@@ -24,6 +31,8 @@ final class FeedCell: UICollectionViewCell {
     }
     
     static let reuseIdentifier = "FeedCell"
+    
+    private(set) var disposeBag = DisposeBag()
     
     // MARK: - Properties
     
@@ -44,9 +53,48 @@ final class FeedCell: UICollectionViewCell {
     let likesLabel: UILabel = {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.setContentCompressionResistancePriority(.required, for: .horizontal)
         view.font = AppStyle.Font.body
         view.textColor = AppStyle.Color.primaryColor
         view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let contributorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let descriptorLabel: UILabel = {
+        let view = UILabel()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.font = AppStyle.Font.caption
+        view.textColor = AppStyle.Color.primaryColor
+        view.textAlignment = .right
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.text = "contributor_title".localized
+        return view
+    }()
+    
+    let authorButton: UIButton = {
+        let view = UIButton(type: .system)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        view.titleLabel?.textAlignment = .right
+        view.setTitleColor(AppStyle.Color.primaryColor, for: .normal)
+        view.contentHorizontalAlignment = .right
+        
+        return view
+    }()
+    
+    let stackView: UIStackView = {
+        let view = UIStackView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.axis = .horizontal
+        view.alignment = .center
+        view.distribution = .fillProportionally
         return view
     }()
     
@@ -61,6 +109,9 @@ final class FeedCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: .zero)
         layout()
+        configureRoundedCorners()
+        configureShadowEffect()
+        configureTapAnimation()
     }
     
     // Required initializer not implemented
@@ -80,42 +131,47 @@ final class FeedCell: UICollectionViewCell {
         ).cgPath
     }
     
+}
+
+private extension FeedCell {
+    
     // Set up the layout constraints
-    private func layout() {
+    func layout() {
         
         playerView.backgroundColor = AppStyle.Color.secondaryBackgroundColor
         
-        // Apply rounded corners to contentView
-        contentView.layer.cornerRadius = AppStyle.Radius.default
         contentView.layer.masksToBounds = true
-        
-        webView.layer.cornerRadius = AppStyle.Radius.default
         webView.layer.masksToBounds = true
-        
-        // Set masks to bounds to false to avoid the shadow
-        // from being clipped to the corner radius
-        layer.cornerRadius = AppStyle.Radius.default
         layer.masksToBounds = false
-        
-        // Apply a shadow
-        layer.shadowRadius = AppStyle.Radius.shadowRadius
-        layer.shadowOpacity = 0.20
-        layer.shadowColor = UIColor.black.cgColor
-        layer.shadowOffset = CGSize(width: 0, height: 5)
         
         contentView.addSubview(playerView)
         
-        playerView.addSubview(likesLabel)
         playerView.addSubview(webView)
+        playerView.addSubview(stackView)
+        
+        stackView.addArrangedSubview(likesLabel)
+        stackView.addArrangedSubview(contributorView)
+        
+        contributorView.addSubview(descriptorLabel)
+        contributorView.addSubview(authorButton)
         
         NSLayoutConstraint.activate([
             playerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             playerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             playerView.topAnchor.constraint(equalTo: contentView.topAnchor),
             playerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+
+            stackView.topAnchor.constraint(equalTo: webView.bottomAnchor, constant: AppStyle.Spacing.default),
+            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: AppStyle.Spacing.default),
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -AppStyle.Spacing.default),
             
-            likesLabel.topAnchor.constraint(equalTo: webView.bottomAnchor, constant: AppStyle.Spacing.default),
-            likesLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: AppStyle.Spacing.default),
+            descriptorLabel.topAnchor.constraint(equalTo: contributorView.topAnchor),
+            descriptorLabel.bottomAnchor.constraint(equalTo: authorButton.topAnchor),
+            descriptorLabel.trailingAnchor.constraint(equalTo: authorButton.trailingAnchor),
+            
+            authorButton.leadingAnchor.constraint(equalTo: contributorView.leadingAnchor),
+            authorButton.trailingAnchor.constraint(equalTo: contributorView.trailingAnchor),
+            authorButton.bottomAnchor.constraint(equalTo: contributorView.bottomAnchor)
         ])
         
         leadingConstraint = webView.leadingAnchor.constraint(equalTo: playerView.leadingAnchor, constant: AppStyle.Spacing.default)
@@ -124,13 +180,29 @@ final class FeedCell: UICollectionViewCell {
         trailingConstraint?.isActive = true
         topConstraint = webView.topAnchor.constraint(equalTo: playerView.topAnchor, constant: AppStyle.Spacing.large)
         topConstraint?.isActive = true
-        bottomConstraint = likesLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -AppStyle.Spacing.default)
+        bottomConstraint = stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -AppStyle.Spacing.small)
         bottomConstraint?.isActive = true
+    }
+    
+    func configureTapAnimation() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
         playerView.addGestureRecognizer(tapGesture)
     }
     
-    @objc private func handleTap(_ sender: UITapGestureRecognizer) {
+    func configureShadowEffect() {
+        layer.shadowRadius = AppStyle.Radius.shadowRadius
+        layer.shadowOpacity = 0.20
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowOffset = CGSize(width: 0, height: 5)
+    }
+    
+    func configureRoundedCorners() {
+        contentView.layer.cornerRadius = AppStyle.Radius.default
+        webView.layer.cornerRadius = AppStyle.Radius.default
+        layer.cornerRadius = AppStyle.Radius.default
+    }
+    
+    @objc func handleTap(_ sender: UITapGestureRecognizer) {
         UIView.animate(withDuration: Constants.animationDuration, animations: {
             self.playerView.transform = CGAffineTransform(scaleX: Constants.scaleTransform, y: Constants.scaleTransform)
         }) { _ in
@@ -139,9 +211,11 @@ final class FeedCell: UICollectionViewCell {
             }
         }
     }
-    
-    // MARK: - Configuration
-    
+}
+
+// MARK: - Configuration
+
+extension FeedCell {
     // Configure the cell with the provided content
     func configure(content: FeedCellContent) {
         guard let videoUrl = content.videoUrl else {
@@ -154,11 +228,12 @@ final class FeedCell: UICollectionViewCell {
             webView.load(URLRequest(url: embedURL))
         }
         
-        if let likesCount = content.likesCount {
-            likesLabel.text = "\(likesCount) likes"
-            likesLabel.isHidden = false
+        if let contributorContent = content.contributorContent {
+            likesLabel.text = "\(contributorContent.likesCount ?? .zero) likes"
+            authorButton.setTitle(contributorContent.user?.userName ?? "", for: .normal)
+            stackView.isHidden = false
         } else {
-            likesLabel.isHidden = true
+            stackView.isHidden = true
             // Set bottom constraint
             bottomConstraint = webView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -AppStyle.Spacing.small)
             bottomConstraint?.isActive = true
@@ -170,3 +245,21 @@ final class FeedCell: UICollectionViewCell {
     }
 }
 
+extension FeedCell {
+    
+    struct Input {
+        
+    }
+    
+    struct Output {
+        let authorButtonTapObservable: Observable<Void>
+        let disposeBag: DisposeBag
+    }
+    
+    func connect(_ input: Input) -> Output {
+        disposeBag = DisposeBag()
+        
+        return Output(authorButtonTapObservable: authorButton.rx.tap.asObservable(), disposeBag: disposeBag)
+    }
+    
+}

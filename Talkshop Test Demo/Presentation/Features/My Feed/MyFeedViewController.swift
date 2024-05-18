@@ -19,6 +19,8 @@ final class MyFeedViewController: UIViewController {
     /// The view model driving the feed.
     let viewModel: MyFeedProtocol
     
+    let mainFactory: MainFactoryProtocol
+    
     /// The data source for the collection view.
     private var dataSource: UICollectionViewDiffableDataSource<MyFeedDataSource.Section, MyFeedDataSource.Item>?
     
@@ -35,8 +37,9 @@ final class MyFeedViewController: UIViewController {
     
     /// Initializes the view controller with a view model.
     /// - Parameter viewModel: The view model for the feed.
-    init(viewModel: MyFeedProtocol) {
+    init(viewModel: MyFeedProtocol, mainFactory: MainFactoryProtocol) {
         self.viewModel = viewModel
+        self.mainFactory = mainFactory
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -155,6 +158,23 @@ extension MyFeedViewController {
             return nil
         }
         cell.configure(content: content)
+        
+        let output = cell.connect(.init())
+        
+        output.authorButtonTapObservable
+            .subscribe(onNext: {
+                guard let user = content.contributorContent?.user else {
+                    return
+                }
+                // Navigate to user page
+                let postRepository = PostRepository()
+                let fetchPostUseCase = FetchPostsUseCase(repository: postRepository)
+                let myProfileViewModel = MyProfileViewModel(fetchPostsUseCase: fetchPostUseCase, user: user)
+                let myProfileViewController = MyProfileViewController(viewModel: myProfileViewModel)
+                self.present(myProfileViewController, animated: true, completion: nil)
+            })
+            .disposed(by: output.disposeBag)
+        
         return cell
     }
     

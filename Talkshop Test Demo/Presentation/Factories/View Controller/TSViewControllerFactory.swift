@@ -11,8 +11,8 @@ class TSViewControllerFactory: TSViewControllerFactoryProtocol {
     
     init() { }
     
-    func createMyFeedViewController(viewModel: MyFeedProtocol) -> MyFeedViewController {
-        MyFeedViewController(viewModel: viewModel)
+    func createMyFeedViewController(viewModel: MyFeedProtocol, mainFactory: MainFactoryProtocol) -> MyFeedViewController {
+        MyFeedViewController(viewModel: viewModel, mainFactory: mainFactory)
     }
     
     func createMyProfileViewController(viewModel: MyProfileProtocol) -> MyProfileViewController {

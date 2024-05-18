@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+struct Post {
+    let postId: String
+    let videoUrl: String
+    let thumbNailUrl: String
+    let user: User
+    let likeCount: Int
+}

@@ -6,3 +6,15 @@
 //
 
 import Foundation
+
+struct UserMapper {
+    
+    static func transformUserResponse(user: [ResponseUser]) -> [User] {
+        user.map { user in
+                .init(userId: user.userId,
+                      userName: user.userName,
+                      userImage: nil)
+        }
+    }
+    
+}

@@ -84,13 +84,13 @@ final class MyProfileViewModel: MyProfileProtocol {
     func generateDataSource(posts: [Post], user: User) -> [MyProfileDataSource.DataSource] {
         let dS: [MyProfileDataSource.DataSource] = [
             .init(section: .main, rows: [
-                .myProfileOverview(.init(username: user.userName, image: user.userProfileImage))
+                .myProfileOverview(.init(username: user.userName, image: user.userImage ?? UIImage.displayPicture))
             ]),
             .init(section: .myPosts, rows: posts.compactMap { post -> MyProfileDataSource.Item? in
                 guard let url = URL(string: post.videoUrl) else {
                     return nil
                 }
-                return .myProfileFeedCell(.init(videoUrl: url, likesCount: nil))
+                return .myProfileFeedCell(.init(videoUrl: url, contributorContent: nil))
             })
         ]
         return dS

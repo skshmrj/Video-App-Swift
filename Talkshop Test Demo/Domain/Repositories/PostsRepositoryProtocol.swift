@@ -8,5 +8,5 @@
 import RxSwift
 
 protocol PostsRepositoryProtocol {
-    func fetchPosts() -> Observable<[Post]>
+    func fetchPosts() -> Observable<[ResponsePost]>
 }

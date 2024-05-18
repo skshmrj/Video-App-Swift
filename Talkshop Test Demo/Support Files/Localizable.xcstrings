@@ -1,6 +1,17 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "contributor_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contributed by"
+          }
+        }
+      }
+    },
     "my_feed_tab_item_title" : {
       "extractionState" : "manual",
       "localizations" : {
