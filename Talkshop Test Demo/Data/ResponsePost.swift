@@ -7,10 +7,11 @@
 
 import Foundation
 
-struct Post: Decodable {
+struct ResponsePost: Decodable {
     let postId: String
     let videoUrl: String
     let thumbNailUrl: String
     let username: String
+    let userId: String
     let likeCount: Int
 }

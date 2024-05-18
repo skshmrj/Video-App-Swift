@@ -7,8 +7,8 @@
 
 import UIKit
 
-struct User {
+struct ResponseUser {
     let userId: String
     let userName: String
-    let userProfileImage: UIImage
+    let thumbnailUrl: String
 }
