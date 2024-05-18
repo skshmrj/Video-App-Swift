@@ -50,6 +50,11 @@ final class FeedCell: UICollectionViewCell {
         return view
     }()
     
+    var bottomConstraint: NSLayoutConstraint?
+    var topConstraint: NSLayoutConstraint?
+    var leadingConstraint: NSLayoutConstraint?
+    var trailingConstraint: NSLayoutConstraint?
+    
     // MARK: - Initialization
     
     // Initialize the cell
@@ -109,15 +114,18 @@ final class FeedCell: UICollectionViewCell {
             playerView.topAnchor.constraint(equalTo: contentView.topAnchor),
             playerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
-            webView.leadingAnchor.constraint(equalTo: playerView.leadingAnchor, constant: AppStyle.Spacing.default),
-            webView.trailingAnchor.constraint(equalTo: playerView.trailingAnchor, constant: -AppStyle.Spacing.default),
-            webView.topAnchor.constraint(equalTo: playerView.topAnchor, constant: AppStyle.Spacing.large),
-            
             likesLabel.topAnchor.constraint(equalTo: webView.bottomAnchor, constant: AppStyle.Spacing.default),
             likesLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: AppStyle.Spacing.default),
-            likesLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -AppStyle.Spacing.default),
         ])
         
+        leadingConstraint = webView.leadingAnchor.constraint(equalTo: playerView.leadingAnchor, constant: AppStyle.Spacing.default)
+        leadingConstraint?.isActive = true
+        trailingConstraint = webView.trailingAnchor.constraint(equalTo: playerView.trailingAnchor, constant: -AppStyle.Spacing.default)
+        trailingConstraint?.isActive = true
+        topConstraint = webView.topAnchor.constraint(equalTo: playerView.topAnchor, constant: AppStyle.Spacing.large)
+        topConstraint?.isActive = true
+        bottomConstraint = likesLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -AppStyle.Spacing.default)
+        bottomConstraint?.isActive = true
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
         playerView.addGestureRecognizer(tapGesture)
     }
@@ -146,7 +154,19 @@ final class FeedCell: UICollectionViewCell {
             webView.load(URLRequest(url: embedURL))
         }
         
-        likesLabel.text = "\(content.likesCount ?? .zero) likes"
+        if let likesCount = content.likesCount {
+            likesLabel.text = "\(likesCount) likes"
+            likesLabel.isHidden = false
+        } else {
+            likesLabel.isHidden = true
+            // Set bottom constraint
+            bottomConstraint = webView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -AppStyle.Spacing.small)
+            bottomConstraint?.isActive = true
+            // Adjust other constraints
+            leadingConstraint?.constant = AppStyle.Spacing.small
+            topConstraint?.constant = AppStyle.Spacing.small
+            trailingConstraint?.constant = -AppStyle.Spacing.small
+        }
     }
 }
 

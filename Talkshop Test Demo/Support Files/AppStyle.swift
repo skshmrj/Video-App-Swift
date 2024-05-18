@@ -29,6 +29,7 @@ struct AppStyle {
     
     struct Font {
         static let header = UIFont.systemFont(ofSize: 26, weight: .bold)
+        static let title = UIFont.systemFont(ofSize: 20, weight: .bold)
         static let body = UIFont.systemFont(ofSize: 16, weight: .semibold)
     }
 }

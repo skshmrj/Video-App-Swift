@@ -11,6 +11,10 @@ import RxSwift
 /// View controller responsible for displaying user profile information.
 final class MyProfileViewController: UIViewController {
     
+    struct Constants {
+        static let headerHeight: CGFloat = 75.0
+    }
+    
     /// The view model driving the user profile.
     let viewModel: MyProfileProtocol
     
@@ -63,7 +67,7 @@ extension MyProfileViewController {
     /// Binds view model outputs to the view.
     private func bind() {
         collectionView.register(HeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderView")
-        collectionView.register(ProfileFeedCell.self, forCellWithReuseIdentifier: "ProfileFeedCell")
+        collectionView.register(FeedCell.self, forCellWithReuseIdentifier: FeedCell.reuseIdentifier)
         collectionView.register(ProfileOverviewCell.self, forCellWithReuseIdentifier: "ProfileOverviewCell")
         
         bindDataSource()
@@ -104,9 +108,9 @@ extension MyProfileViewController {
         dataSource = UICollectionViewDiffableDataSource<MyProfileDataSource.Section, MyProfileDataSource.Item>(collectionView: collectionView) { [weak self] collectionView, indexPath, item in
             switch item {
             case let .myProfileFeedCell(content):
-                return self?.getProfileFeedCell(collectionView: collectionView, content: content, indexPath: indexPath)
+                return self?.getFeedCell(collectionView: collectionView, content: content, indexPath: indexPath)
             case let .myProfileOverview(content):
-                return self?.getProfileFeedCell(collectionView: collectionView, content: content, indexPath: indexPath)
+                return self?.getProfileOverviewCell(collectionView: collectionView, content: content, indexPath: indexPath)
             }
         }
     }
@@ -130,10 +134,11 @@ extension MyProfileViewController {
             case .main:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                item.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
+                let offset = AppStyle.Spacing.medium
+                item.contentInsets = NSDirectionalEdgeInsets(top: offset, leading: offset, bottom: offset, trailing: offset)
                 let groupSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0), // Full width of the section
-                    heightDimension: .fractionalHeight(0.20) // Adjust as needed for your design
+                    heightDimension: .fractionalHeight(0.25) // Adjust as needed for your design
                 )
                 group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
             case .myPosts:
@@ -142,7 +147,8 @@ extension MyProfileViewController {
                     heightDimension: .fractionalHeight(1.0)
                 )
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                item.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
+                let offset = AppStyle.Spacing.medium
+                item.contentInsets = NSDirectionalEdgeInsets(top: offset, leading: offset, bottom: offset, trailing: offset)
                 let groupSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0), // Full width of the section
                     heightDimension: .fractionalHeight(0.25) // Adjust as needed for your design
@@ -152,7 +158,7 @@ extension MyProfileViewController {
             
             let headerSize = NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .absolute(75.0)
+                heightDimension: .absolute(Constants.headerHeight)
             )
             let header = NSCollectionLayoutBoundarySupplementaryItem(
                 layoutSize: headerSize,
@@ -175,15 +181,15 @@ extension MyProfileViewController {
 extension MyProfileViewController {
     // Additional methods for configuring cells can be added here if needed
     
-    private func getProfileFeedCell(collectionView: UICollectionView, content: ProfileFeedCellContent, indexPath: IndexPath) -> ProfileFeedCell? {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ProfileFeedCell", for: indexPath) as? ProfileFeedCell else {
+    private func getFeedCell(collectionView: UICollectionView, content: FeedCellContent, indexPath: IndexPath) -> FeedCell? {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedCell.reuseIdentifier, for: indexPath) as? FeedCell else {
             return nil
         }
         cell.configure(content: content)
         return cell
     }
     
-    private func getProfileFeedCell(collectionView: UICollectionView, content: ProfileOverviewContent, indexPath: IndexPath) -> ProfileOverviewCell? {
+    private func getProfileOverviewCell(collectionView: UICollectionView, content: ProfileOverviewContent, indexPath: IndexPath) -> ProfileOverviewCell? {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ProfileOverviewCell", for: indexPath) as? ProfileOverviewCell else {
             return nil
         }
@@ -212,7 +218,7 @@ extension MyProfileViewController {
                 withReuseIdentifier: "HeaderView",
                 for: indexPath
             ) as? HeaderView
-            headerView?.configure(title: "my_profile_my_posts_title".localized, textColor: .label, font: .systemFont(ofSize: 18, weight: .semibold))
+            headerView?.configure(title: "my_profile_my_posts_title".localized, font: AppStyle.Font.title)
             return headerView
         }
     }

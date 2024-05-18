@@ -32,6 +32,7 @@ final class ProfileOverviewCell: UICollectionViewCell {
         label.textAlignment = .center
         label.font = AppStyle.Font.header
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = AppStyle.Color.primaryColor
         return label
     }()
     
@@ -48,6 +49,9 @@ final class ProfileOverviewCell: UICollectionViewCell {
 
 private extension ProfileOverviewCell {
     func layout() {
+        // Apply rounded corners to contentView
+        contentView.layer.cornerRadius = AppStyle.Radius.default
+        contentView.layer.masksToBounds = true
         contentView.backgroundColor = AppStyle.Color.secondaryBackgroundColor
         
         contentView.addSubview(imageView)

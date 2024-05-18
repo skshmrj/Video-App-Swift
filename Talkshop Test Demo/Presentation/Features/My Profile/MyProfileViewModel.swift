@@ -17,7 +17,7 @@ struct MyProfileDataSource {
     
     enum Item: Hashable {
         case myProfileOverview(ProfileOverviewContent)
-        case myProfileFeedCell(ProfileFeedCellContent)
+        case myProfileFeedCell(FeedCellContent)
     }
     
     internal struct DataSource {
@@ -90,7 +90,7 @@ final class MyProfileViewModel: MyProfileProtocol {
                 guard let url = URL(string: post.videoUrl) else {
                     return nil
                 }
-                return .myProfileFeedCell(.init(videoUrl: url))
+                return .myProfileFeedCell(.init(videoUrl: url, likesCount: nil))
             })
         ]
         return dS
