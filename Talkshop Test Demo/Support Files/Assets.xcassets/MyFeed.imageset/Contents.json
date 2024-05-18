@@ -1,8 +1,19 @@
 {
   "images" : [
     {
-      "filename" : "icons8-for-you-30.png",
-      "idiom" : "universal"
+      "filename" : "icons8-idea-30(@1×).png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "icons8-idea-60(@2×).png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "icons8-idea-90(@3×).png",
+      "idiom" : "universal",
+      "scale" : "3x"
     }
   ],
   "info" : {

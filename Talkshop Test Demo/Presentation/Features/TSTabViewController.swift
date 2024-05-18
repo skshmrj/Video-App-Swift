@@ -58,12 +58,12 @@ final class TSTabViewController: UITabBarController {
         let fetchUseCase = useCaseFactory.createFetchPostsUseCase(repository: postsRepositories)
         let myFeedViewModel = viewModelFactory.createMyFeedViewModel(fetchPostsUseCase: fetchUseCase)
         let myFeedViewController = viewcontrollerFactory.createMyFeedViewController(viewModel: myFeedViewModel)
-        myFeedViewController.tabBarItem = UITabBarItem(title: "my_feed_tab_item_title".localized, image: UIImage.myFeed, tag: 0)
+        myFeedViewController.tabBarItem = UITabBarItem(title: "", image: UIImage.myFeed, tag: 0)
         
-        let myCurrentUser = User(userId: "user_A", userName: "Saksham", userProfileImage: UIImage.displayPicture)
+        let myCurrentUser = User(userId: "user_A", userName: "Nico Robin", userProfileImage: UIImage.displayPicture)
         let myProfileViewModel = viewModelFactory.createMyProfileViewModel(fetchPostsUseCase: fetchUseCase, user: myCurrentUser)
         let myProfileViewController = viewcontrollerFactory.createMyProfileViewController(viewModel: myProfileViewModel)
-        myProfileViewController.tabBarItem = UITabBarItem(title: "my_profile_tab_bar_title".localized, image: UIImage.myProfile, tag: 1)
+        myProfileViewController.tabBarItem = UITabBarItem(title: "", image: UIImage.myProfile, tag: 1)
         
         setViewControllers([myFeedViewController, myProfileViewController], animated: true)
     }
@@ -74,16 +74,6 @@ final class TSTabViewController: UITabBarController {
         let tabBar = self.tabBar
         tabBar.tintColor = AppStyle.Color.primaryColor
         tabBar.barTintColor = AppStyle.Color.backgroundColor
-        
-        // Shadow
-        tabBar.layer.shadowColor = UIColor.gray.cgColor
-        tabBar.layer.shadowOffset = CGSize(width: 0, height: -2)
-        tabBar.layer.shadowRadius = 4
-        tabBar.layer.shadowOpacity = 0.5
-        
-        // Remove the default border
-        tabBar.layer.borderWidth = 0.0
-        tabBar.clipsToBounds = true
     }
     
 }

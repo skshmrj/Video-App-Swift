@@ -9,11 +9,13 @@ import UIKit
 
 final class HeaderView: UICollectionReusableView {
     
+    static let reuseIdentifier = "HeaderView"
+    
     let titleLabel: UILabel = {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.textColor = AppStyle.Color.primaryColor
-        view.font = .monospacedSystemFont(ofSize: 20, weight: .semibold)
+        view.font = AppStyle.Font.header
         return view
     }()
     

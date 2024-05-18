@@ -11,13 +11,24 @@ struct AppStyle {
     
     struct Spacing {
         static let small: CGFloat = 8
+        static let medium: CGFloat = 16
         static let `default`: CGFloat = 20
         static let large: CGFloat = 32
     }
     
     struct Color {
         static let primaryColor = UIColor(named: "AppTheme")
-        static let backgroundColor = UIColor.systemBackground
-        static let secondaryBackgroundColor = UIColor.secondarySystemBackground
+        static let backgroundColor = UIColor(named: "AppBackground")
+        static let secondaryBackgroundColor = UIColor(named: "AppSecondaryBackground")
+    }
+    
+    struct Radius {
+        static let `default`: CGFloat = 16
+        static let shadowRadius: CGFloat = 8
+    }
+    
+    struct Font {
+        static let header = UIFont.systemFont(ofSize: 26, weight: .bold)
+        static let body = UIFont.systemFont(ofSize: 16, weight: .semibold)
     }
 }

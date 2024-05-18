@@ -1,8 +1,19 @@
 {
   "images" : [
     {
-      "filename" : "icons8-female-user-30.png",
-      "idiom" : "universal"
+      "filename" : "icons8-female-user-60(@1×).png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "icons8-female-user-120(@2×).png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "icons8-female-user-180(@3×).png",
+      "idiom" : "universal",
+      "scale" : "3x"
     }
   ],
   "info" : {

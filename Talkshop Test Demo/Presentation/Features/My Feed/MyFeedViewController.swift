@@ -12,6 +12,10 @@ import RxCocoa
 /// View controller responsible for displaying a feed.
 final class MyFeedViewController: UIViewController {
     
+    struct Constants {
+        static let headerHeight: CGFloat = 75.0
+    }
+    
     /// The view model driving the feed.
     let viewModel: MyFeedProtocol
     
@@ -25,7 +29,7 @@ final class MyFeedViewController: UIViewController {
     private lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: createCollectionViewLayout())
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .systemBackground
+        collectionView.backgroundColor = AppStyle.Color.backgroundColor
         return collectionView
     }()
     
@@ -63,8 +67,8 @@ extension MyFeedViewController {
     
     /// Binds view model outputs to the view.
     private func bind() {
-        collectionView.register(FeedCell.self, forCellWithReuseIdentifier: "FeedCell")
-        collectionView.register(HeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderView")
+        collectionView.register(FeedCell.self, forCellWithReuseIdentifier: FeedCell.reuseIdentifier)
+        collectionView.register(HeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HeaderView.reuseIdentifier)
         
         bindDataSource()
         bindSupplementaryView()
@@ -117,12 +121,13 @@ extension MyFeedViewController {
     private func createCollectionViewLayout() -> UICollectionViewCompositionalLayout {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        item.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
+        let offset = AppStyle.Spacing.medium
+        item.contentInsets = NSDirectionalEdgeInsets(top: offset, leading: offset, bottom: offset, trailing: offset)
         
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(0.3))
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(0.4))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
-        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(75.0))
+        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(Constants.headerHeight))
         let header = NSCollectionLayoutBoundarySupplementaryItem(
             layoutSize: headerSize,
             elementKind: UICollectionView.elementKindSectionHeader,
@@ -146,7 +151,7 @@ extension MyFeedViewController {
     ///   - indexPath: The index path of the cell.
     /// - Returns: A configured feed cell.
     private func getFeedCell(collectionView: UICollectionView, content: FeedCellContent, indexPath: IndexPath) -> FeedCell? {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FeedCell", for: indexPath) as? FeedCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedCell.reuseIdentifier, for: indexPath) as? FeedCell else {
             return nil
         }
         cell.configure(content: content)
@@ -156,7 +161,7 @@ extension MyFeedViewController {
     private func getHeaderView(indexPath: IndexPath) -> UICollectionReusableView? {
         let headerView = collectionView.dequeueReusableSupplementaryView(
             ofKind: UICollectionView.elementKindSectionHeader,
-            withReuseIdentifier: "HeaderView",
+            withReuseIdentifier: HeaderView.reuseIdentifier,
             for: indexPath
         ) as? HeaderView
         headerView?.configure(title: "my_feed_tab_item_title".localized)

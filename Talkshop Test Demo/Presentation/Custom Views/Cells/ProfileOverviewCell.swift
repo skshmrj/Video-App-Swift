@@ -14,6 +14,11 @@ struct ProfileOverviewContent: Hashable {
 
 final class ProfileOverviewCell: UICollectionViewCell {
     
+    struct Constants {
+        static let imageHeight: CGFloat = 50.0
+        static let imageWidth: CGFloat = 50.0
+    }
+    
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -25,7 +30,7 @@ final class ProfileOverviewCell: UICollectionViewCell {
     private let nameLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        label.font = AppStyle.Font.header
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -52,15 +57,16 @@ private extension ProfileOverviewCell {
             // Constraints for imageView
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: AppStyle.Spacing.default),
             imageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            imageView.widthAnchor.constraint(equalToConstant: 50),
-            imageView.heightAnchor.constraint(equalToConstant: 50),
+            imageView.widthAnchor.constraint(equalToConstant: Constants.imageWidth),
+            imageView.heightAnchor.constraint(equalToConstant: Constants.imageHeight),
             
             // Constraints for nameLabel
-            nameLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
+            nameLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: AppStyle.Spacing.small),
             nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             nameLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -AppStyle.Spacing.default)
         ])
+    
     }
 }
 

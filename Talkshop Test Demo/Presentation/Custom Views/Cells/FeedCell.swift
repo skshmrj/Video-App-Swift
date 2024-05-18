@@ -18,6 +18,13 @@ struct FeedCellContent: Hashable {
 // Custom UICollectionViewCell for displaying feed content
 final class FeedCell: UICollectionViewCell {
     
+    struct Constants {
+        static let animationDuration = 0.1
+        static let scaleTransform = 0.95
+    }
+    
+    static let reuseIdentifier = "FeedCell"
+    
     // MARK: - Properties
     
     private var webView: WKWebView = {
@@ -37,8 +44,8 @@ final class FeedCell: UICollectionViewCell {
     let likesLabel: UILabel = {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.font = UIFont.systemFont(ofSize: 14)
-        view.textColor = .gray
+        view.font = AppStyle.Font.body
+        view.textColor = AppStyle.Color.primaryColor
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -58,30 +65,71 @@ final class FeedCell: UICollectionViewCell {
     
     // MARK: - Layout
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        // Improve scrolling performance with an explicit shadowPath
+        layer.shadowPath = UIBezierPath(
+            roundedRect: bounds,
+            cornerRadius: AppStyle.Radius.default
+        ).cgPath
+    }
+    
     // Set up the layout constraints
     private func layout() {
         
-        contentView.backgroundColor = AppStyle.Color.secondaryBackgroundColor
+        playerView.backgroundColor = AppStyle.Color.secondaryBackgroundColor
+        
+        // Apply rounded corners to contentView
+        contentView.layer.cornerRadius = AppStyle.Radius.default
+        contentView.layer.masksToBounds = true
+        
+        webView.layer.cornerRadius = AppStyle.Radius.default
+        webView.layer.masksToBounds = true
+        
+        // Set masks to bounds to false to avoid the shadow
+        // from being clipped to the corner radius
+        layer.cornerRadius = AppStyle.Radius.default
+        layer.masksToBounds = false
+        
+        // Apply a shadow
+        layer.shadowRadius = AppStyle.Radius.shadowRadius
+        layer.shadowOpacity = 0.20
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowOffset = CGSize(width: 0, height: 5)
         
         contentView.addSubview(playerView)
-        contentView.addSubview(likesLabel)
+        
+        playerView.addSubview(likesLabel)
         playerView.addSubview(webView)
         
         NSLayoutConstraint.activate([
-            playerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: AppStyle.Spacing.default),
-            playerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -AppStyle.Spacing.default),
-            playerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: AppStyle.Spacing.large),
-            playerView.heightAnchor.constraint(equalToConstant: 200),
-            playerView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -AppStyle.Spacing.large),
+            playerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            playerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            playerView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            playerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
+            webView.leadingAnchor.constraint(equalTo: playerView.leadingAnchor, constant: AppStyle.Spacing.default),
+            webView.trailingAnchor.constraint(equalTo: playerView.trailingAnchor, constant: -AppStyle.Spacing.default),
+            webView.topAnchor.constraint(equalTo: playerView.topAnchor, constant: AppStyle.Spacing.large),
+            
+            likesLabel.topAnchor.constraint(equalTo: webView.bottomAnchor, constant: AppStyle.Spacing.default),
             likesLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: AppStyle.Spacing.default),
-            likesLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -AppStyle.Spacing.small),
-            
-            webView.leadingAnchor.constraint(equalTo: playerView.leadingAnchor),
-            webView.trailingAnchor.constraint(equalTo: playerView.trailingAnchor),
-            webView.topAnchor.constraint(equalTo: playerView.topAnchor),
-            webView.bottomAnchor.constraint(equalTo: playerView.bottomAnchor)
+            likesLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -AppStyle.Spacing.default),
         ])
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+        playerView.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc private func handleTap(_ sender: UITapGestureRecognizer) {
+        UIView.animate(withDuration: Constants.animationDuration, animations: {
+            self.playerView.transform = CGAffineTransform(scaleX: Constants.scaleTransform, y: Constants.scaleTransform)
+        }) { _ in
+            UIView.animate(withDuration: Constants.animationDuration) {
+                self.playerView.transform = CGAffineTransform.identity
+            }
+        }
     }
     
     // MARK: - Configuration
