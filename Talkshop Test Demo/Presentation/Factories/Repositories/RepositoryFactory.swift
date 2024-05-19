@@ -7,8 +7,12 @@
 
 import Foundation
 
+/// A factory struct responsible for creating repositories related to Talkshop.
 struct RepositoryFactory: RepositoryFactoryProtocol {
     
+    /// Creates a repository for posts.
+    ///
+    /// - Returns: A repository conforming to `PostsRepositoryProtocol`.
     func createPostsRepository() -> PostsRepositoryProtocol {
         PostRepository()
     }

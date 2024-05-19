@@ -9,62 +9,80 @@ import Foundation
 import RxSwift
 import RxCocoa
 
+// MARK: - MyProfileDataSource
+
+/// Data source for MyProfileViewController.
 struct MyProfileDataSource {
+    // Define sections for the data source.
     enum Section: Hashable {
         case main(String)
         case myPosts
     }
     
+    // Define items within each section.
     enum Item: Hashable {
         case myProfileOverview(ProfileOverviewContent)
         case myProfileFeedCell(FeedCellContent)
     }
     
+    // Data structure representing a section with its rows.
     internal struct DataSource {
         let section: Section
         let rows: [Item]
     }
 }
 
+// MARK: - MyProfileViewModelConnection
+
+/// Connection inputs and outputs for MyProfileViewModel.
 enum MyProfileViewModelConnection {
+    // Input structure for connecting view model.
     struct Input {
         let isActiveObservable: Observable<Bool>
     }
     
+    // Output structure for connecting view model.
     struct Output {
         let dataSource: Observable<[MyProfileDataSource.DataSource]>
         let errorObservable: Observable<Error>
     }
 }
 
+// MARK: - MyProfileProtocol
+
+/// Protocol defining the behavior of MyProfileViewModel.
 protocol MyProfileProtocol {
     func connect(input: MyProfileViewModelConnection.Input) -> MyProfileViewModelConnection.Output
 }
 
+// MARK: - MyProfileViewModel
+
+/// View model for MyProfileViewController.
 final class MyProfileViewModel: MyProfileProtocol {
     
-    let dataSource = BehaviorRelay<[MyProfileDataSource.DataSource]>(value: [])
+    // MARK: Properties
     
+    let dataSource = BehaviorRelay<[MyProfileDataSource.DataSource]>(value: [])
+    let disposeBag = DisposeBag()
+    let errorSubject = PublishSubject<Error>()
+    let user: User
     let fetchPostsUseCase: FetchPostsUseCaseProtocol
     
-    let disposeBag = DisposeBag()
-    
-    let errorSubject = PublishSubject<Error>()
-    
-    let user: User
+    // MARK: Initialization
     
     init(fetchPostsUseCase: FetchPostsUseCaseProtocol, user: User) {
         self.fetchPostsUseCase = fetchPostsUseCase
         self.user = user
     }
     
+    // MARK: Public Methods
+    
+    /// Connects the view model to input and output signals.
     func connect(input: MyProfileViewModelConnection.Input) -> MyProfileViewModelConnection.Output {
-
-        
         input.isActiveObservable
             .filter { $0 }
             .withUnretained(self)
-            .flatMap { this, arg in
+            .flatMap { this, _ in
                 this.fetchPosts(userId: this.user.userId)
                     .catch { [weak self] error in
                         self?.errorSubject.onNext(error)
@@ -86,7 +104,10 @@ final class MyProfileViewModel: MyProfileProtocol {
                                                    errorObservable: errorSubject.asObservable())
     }
     
-    func generateDataSource(posts: [Post], user: User) -> [MyProfileDataSource.DataSource] {
+    // MARK: Private Methods
+    
+    /// Generates the data source for MyProfileViewController.
+    private func generateDataSource(posts: [Post], user: User) -> [MyProfileDataSource.DataSource] {
         let userName = user.userId != User.currentUser.userId
         ? user.userName
         : "my_profile_tab_bar_title".localized
@@ -95,7 +116,7 @@ final class MyProfileViewModel: MyProfileProtocol {
         ? UIImage.otherUsers
         : user.userImage ?? UIImage.displayPicture
         
-        let dS: [MyProfileDataSource.DataSource] = [
+        let dataSource: [MyProfileDataSource.DataSource] = [
             .init(section: .main(userName), rows: [
                 .myProfileOverview(.init(username: user.userName, image: userImage))
             ]),
@@ -106,15 +127,11 @@ final class MyProfileViewModel: MyProfileProtocol {
                 return .myProfileFeedCell(.init(videoUrl: url, contributorContent: nil))
             })
         ]
-        return dS
+        return dataSource
     }
-}
-
-extension MyProfileViewModel {
     
-    func fetchPosts(userId: String) -> Observable<[Post]> {
+    /// Fetches posts for the given user ID.
+    private func fetchPosts(userId: String) -> Observable<[Post]> {
         return fetchPostsUseCase.fetchPosts(userId: userId)
     }
-    
 }
-

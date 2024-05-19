@@ -17,13 +17,15 @@ final class MyFeedViewController: UIViewController {
     }
     
     /// The view model driving the feed.
-    let viewModel: MyFeedProtocol
+    private let viewModel: MyFeedProtocol
     
-    let mainFactory: MainFactoryProtocol
+    /// Factory for main functionality.
+    private let mainFactory: MainFactoryProtocol
     
     /// The data source for the collection view.
     private var dataSource: UICollectionViewDiffableDataSource<MyFeedDataSource.Section, MyFeedDataSource.Item>?
     
+    /// Observable for indicating the activity status.
     private let isActiveObservable = PublishSubject<Bool>()
     
     /// Dispose bag for RxSwift subscriptions.
@@ -37,16 +39,20 @@ final class MyFeedViewController: UIViewController {
         return collectionView
     }()
     
-    let refreshControl = UIRefreshControl()
+    /// Refresh control for the collection view.
+    private let refreshControl = UIRefreshControl()
     
-    let activityIndicator: UIActivityIndicatorView = {
+    /// Activity indicator for indicating loading state.
+    private let activityIndicator: UIActivityIndicatorView = {
         let view = UIActivityIndicatorView(style: .large)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    /// Initializes the view controller with a view model.
-    /// - Parameter viewModel: The view model for the feed.
+    /// Initializes the view controller with a view model and main factory.
+    /// - Parameters:
+    ///   - viewModel: The view model for the feed.
+    ///   - mainFactory: The main factory for the application.
     init(viewModel: MyFeedProtocol, mainFactory: MainFactoryProtocol) {
         self.viewModel = viewModel
         self.mainFactory = mainFactory
@@ -66,9 +72,10 @@ final class MyFeedViewController: UIViewController {
 }
 
 // MARK: - Private Methods
-extension MyFeedViewController {
+
+private extension MyFeedViewController {
     /// Sets up the layout constraints for the collection view.
-    private func layout() {
+    func layout() {
         view.addSubview(collectionView)
         view.addSubview(activityIndicator)
         collectionView.refreshControl = refreshControl
@@ -86,25 +93,26 @@ extension MyFeedViewController {
         ])
     }
     
-    // Function to start animating the activity indicator
+    /// Function to start animating the activity indicator.
     func startLoading() {
         activityIndicator.startAnimating()
         activityIndicator.isHidden = false
     }
     
-    // Function to stop animating the activity indicator
+    /// Function to stop animating the activity indicator.
     func stopLoading() {
         activityIndicator.stopAnimating()
         activityIndicator.isHidden = true
     }
     
-    @objc private func refreshData() {
+    /// Action triggered when the refresh control value changes.
+    @objc func refreshData() {
         startLoading()
         isActiveObservable.onNext(true)
     }
     
     /// Binds view model outputs to the view.
-    private func bind() {
+    func bind() {
         collectionView.register(FeedCell.self, forCellWithReuseIdentifier: FeedCell.reuseIdentifier)
         collectionView.register(HeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HeaderView.reuseIdentifier)
         
@@ -145,7 +153,8 @@ extension MyFeedViewController {
             .disposed(by: disposeBag)
     }
     
-    private func bindSupplementaryView() {
+    /// Binds the supplementary view to the data source.
+    func bindSupplementaryView() {
         dataSource?.supplementaryViewProvider = { [weak self] (_, kind: String, indexPath: IndexPath) -> UICollectionReusableView? in
             switch kind {
             case UICollectionView.elementKindSectionHeader:
@@ -157,7 +166,7 @@ extension MyFeedViewController {
     }
     
     /// Sets up the data source for the collection view.
-    private func bindDataSource() {
+    func bindDataSource() {
         dataSource = UICollectionViewDiffableDataSource<MyFeedDataSource.Section, MyFeedDataSource.Item>(collectionView: collectionView) { [weak self] collectionView, indexPath, item in
             switch item {
             case .myFeedCell(let content):
@@ -168,7 +177,8 @@ extension MyFeedViewController {
 }
 
 // MARK: - Layout
-extension MyFeedViewController {
+
+private extension MyFeedViewController {
     /// Creates the layout for the collection view.
     /// - Returns: The compositional layout for the collection view.
     private func createCollectionViewLayout() -> UICollectionViewCompositionalLayout {
@@ -195,15 +205,16 @@ extension MyFeedViewController {
     }
 }
 
-// MARK: - Cell Configuration
-extension MyFeedViewController {
+// MARK: - Cell and Header Configuration
+
+private extension MyFeedViewController {
     /// Dequeues and configures a feed cell.
     /// - Parameters:
     ///   - collectionView: The collection view.
     ///   - content: The content to configure the cell with.
     ///   - indexPath: The index path of the cell.
     /// - Returns: A configured feed cell.
-    private func getFeedCell(collectionView: UICollectionView, content: FeedCellContent, indexPath: IndexPath) -> FeedCell? {
+    func getFeedCell(collectionView: UICollectionView, content: FeedCellContent, indexPath: IndexPath) -> FeedCell? {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedCell.reuseIdentifier, for: indexPath) as? FeedCell else {
             return nil
         }
@@ -222,14 +233,17 @@ extension MyFeedViewController {
                 )
                 let viewModel = this.mainFactory.viewModelFactory.createMyProfileViewModel(fetchPostsUseCase: fetchPostsUseCase, user: user)
                 let viewController = this.mainFactory.viewControllerFactory.createMyProfileViewController(viewModel: viewModel)
-                self.present(viewController, animated: true, completion: nil)
+                this.present(viewController, animated: true, completion: nil)
             })
             .disposed(by: output.disposeBag)
         
         return cell
     }
     
-    private func getHeaderView(indexPath: IndexPath) -> UICollectionReusableView? {
+    /// Dequeues and configures a header view.
+    /// - Parameter indexPath: The index path of the header view.
+    /// - Returns: A configured header view.
+    func getHeaderView(indexPath: IndexPath) -> UICollectionReusableView? {
         let headerView = collectionView.dequeueReusableSupplementaryView(
             ofKind: UICollectionView.elementKindSectionHeader,
             withReuseIdentifier: HeaderView.reuseIdentifier,

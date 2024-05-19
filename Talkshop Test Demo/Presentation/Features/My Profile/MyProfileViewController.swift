@@ -8,9 +8,13 @@
 import UIKit
 import RxSwift
 
+import UIKit
+import RxSwift
+
 /// View controller responsible for displaying user profile information.
 final class MyProfileViewController: UIViewController {
     
+    /// Constants used within the view controller.
     struct Constants {
         static let headerHeight: CGFloat = 75.0
     }
@@ -24,6 +28,7 @@ final class MyProfileViewController: UIViewController {
     /// Dispose bag for RxSwift subscriptions.
     private let disposeBag = DisposeBag()
     
+    /// Observable indicating whether the view is active.
     private let isActiveObservable = PublishSubject<Bool>()
     
     /// Collection view for displaying the user profile information.
@@ -34,15 +39,17 @@ final class MyProfileViewController: UIViewController {
         return collectionView
     }()
     
+    /// Activity indicator for indicating data loading.
     let activityIndicator: UIActivityIndicatorView = {
         let view = UIActivityIndicatorView(style: .large)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
+    /// Refresh control for enabling pull-to-refresh functionality.
     let refreshControl = UIRefreshControl()
     
-    
+    /// Button for closing the profile view.
     lazy var closeButton: UIButton = {
         let view = UIButton()
         view.setImage(UIImage.close, for: .normal)
@@ -70,15 +77,18 @@ final class MyProfileViewController: UIViewController {
         bind()
     }
     
+    /// Action method for handling close button taps.
     @objc func closeButtonTapped() {
         dismiss(animated: true, completion: nil)
     }
 }
 
+
 // MARK: - Private Methods
-extension MyProfileViewController {
+private extension MyProfileViewController {
+    
     /// Sets up the layout constraints for the collection view.
-    private func layout() {
+    func layout() {
         view.addSubview(collectionView)
         view.addSubview(closeButton)
         view.addSubview(activityIndicator)
@@ -103,26 +113,8 @@ extension MyProfileViewController {
         ])
     }
     
-    // Function to start animating the activity indicator
-    func startLoading() {
-        activityIndicator.startAnimating()
-        activityIndicator.isHidden = false
-    }
-    
-    // Function to stop animating the activity indicator
-    func stopLoading() {
-        activityIndicator.stopAnimating()
-        activityIndicator.isHidden = true
-    }
-    
-    @objc private func refreshData() {
-        startLoading()
-        isActiveObservable.onNext(true)
-        
-    }
-    
     /// Binds view model outputs to the view.
-    private func bind() {
+    func bind() {
         collectionView.register(HeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HeaderView.reuseIdentifier)
         collectionView.register(FeedCell.self, forCellWithReuseIdentifier: FeedCell.reuseIdentifier)
         collectionView.register(ProfileOverviewCell.self, forCellWithReuseIdentifier: ProfileOverviewCell.reuseIdentifier)
@@ -164,7 +156,8 @@ extension MyProfileViewController {
             .disposed(by: disposeBag)
     }
     
-    private func bindSupplementaryView() {
+    /// Binds the supplementary view to the collection view.
+    func bindSupplementaryView() {
         dataSource?.supplementaryViewProvider = { [weak self] (_, kind: String, indexPath: IndexPath) -> UICollectionReusableView? in
             switch kind {
             case UICollectionView.elementKindSectionHeader:
@@ -176,7 +169,7 @@ extension MyProfileViewController {
     }
     
     /// Sets up the data source for the collection view.
-    private func bindDataSource() {
+    func bindDataSource() {
         dataSource = UICollectionViewDiffableDataSource<MyProfileDataSource.Section, MyProfileDataSource.Item>(collectionView: collectionView) { [weak self] collectionView, indexPath, item in
             switch item {
             case let .myProfileFeedCell(content):
@@ -186,13 +179,33 @@ extension MyProfileViewController {
             }
         }
     }
+    
+    /// Starts the activity indicator animation.
+    func startLoading() {
+        activityIndicator.startAnimating()
+        activityIndicator.isHidden = false
+    }
+    
+    /// Stops the activity indicator animation.
+    func stopLoading() {
+        activityIndicator.stopAnimating()
+        activityIndicator.isHidden = true
+    }
+    
+    /// Action method for refreshing data.
+    @objc func refreshData() {
+        startLoading()
+        isActiveObservable.onNext(true)
+    }
+
 }
 
 // MARK: - Layout
-extension MyProfileViewController {
+private extension MyProfileViewController {
+    
     /// Creates the layout for the collection view.
     /// - Returns: The compositional layout for the collection view.
-    private func createCollectionViewLayout() -> UICollectionViewCompositionalLayout {
+    func createCollectionViewLayout() -> UICollectionViewCompositionalLayout {
         
         let layout = UICollectionViewCompositionalLayout { [weak self] (sectionIndex, layoutEnvironment) -> NSCollectionLayoutSection? in
             
@@ -243,16 +256,22 @@ extension MyProfileViewController {
             
             return section
         }
-
+        
         return layout
     }
-
+    
 }
 
-// MARK: - Cell Configuration
+// MARK: - Cell and Header Configuration
 extension MyProfileViewController {
     // Additional methods for configuring cells can be added here if needed
     
+    /// Configures and returns a feed cell for the collection view.
+    /// - Parameters:
+    ///   - collectionView: The collection view.
+    ///   - content: The content to configure the cell.
+    ///   - indexPath: The index path of the cell.
+    /// - Returns: A configured feed cell.
     private func getFeedCell(collectionView: UICollectionView, content: FeedCellContent, indexPath: IndexPath) -> FeedCell? {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedCell.reuseIdentifier, for: indexPath) as? FeedCell else {
             return nil
@@ -261,6 +280,12 @@ extension MyProfileViewController {
         return cell
     }
     
+    /// Configures and returns a profile overview cell for the collection view.
+    /// - Parameters:
+    ///   - collectionView: The collection view.
+    ///   - content: The content to configure the cell.
+    ///   - indexPath: The index path of the cell.
+    /// - Returns: A configured profile overview cell.
     private func getProfileOverviewCell(collectionView: UICollectionView, content: ProfileOverviewContent, indexPath: IndexPath) -> ProfileOverviewCell? {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileOverviewCell.reuseIdentifier, for: indexPath) as? ProfileOverviewCell else {
             return nil
@@ -269,6 +294,9 @@ extension MyProfileViewController {
         return cell
     }
     
+    /// Configures and returns a header view for the collection view.
+    /// - Parameter indexPath: The index path of the header view.
+    /// - Returns: A configured header view.
     private func getHeaderView(indexPath: IndexPath) -> UICollectionReusableView? {
         
         guard let section = dataSource?.snapshot().sectionIdentifiers[indexPath.section] else {
@@ -294,4 +322,5 @@ extension MyProfileViewController {
             return headerView
         }
     }
+
 }

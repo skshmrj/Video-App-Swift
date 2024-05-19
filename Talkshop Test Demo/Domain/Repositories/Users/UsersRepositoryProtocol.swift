@@ -7,8 +7,12 @@
 
 import RxSwift
 
+/// A protocol defining the required methods for a users repository.
 protocol UsersRepositoryProtocol {
     
+    /// Fetches users from a remote data source.
+    ///
+    /// - Returns: An observable sequence of response user objects.
     func fetchUsers() -> Observable<[ResponseUser]>
     
 }

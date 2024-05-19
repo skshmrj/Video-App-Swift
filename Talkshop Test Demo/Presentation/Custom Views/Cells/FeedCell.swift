@@ -11,45 +11,50 @@ import WebKit
 import RxSwift
 import RxCocoa
 
-// Struct defining the content of a feed cell
+/// A structure defining the content of a feed cell.
 struct FeedCellContent: Hashable {
-    let videoUrl: URL?     // URL of the video
+    let videoUrl: URL?  // URL of the video
     let contributorContent: ContributorViewContent?
 }
 
+/// A structure defining the content for the contributor view.
 struct ContributorViewContent: Hashable {
     let user: User?
-    let likesCount: Int?   // Number of likes for the video
+    let likesCount: Int?  // Number of likes for the video
 }
 
-// Custom UICollectionViewCell for displaying feed content
+/// A custom `UICollectionViewCell` for displaying feed content.
 final class FeedCell: UICollectionViewCell {
     
+    /// Constants used for animations and scaling.
     struct Constants {
         static let animationDuration = 0.1
         static let scaleTransform = 0.95
     }
     
+    /// The reuse identifier for the cell.
     static let reuseIdentifier = "FeedCell"
     
+    /// A dispose bag for RxSwift subscriptions.
     private(set) var disposeBag = DisposeBag()
     
     // MARK: - Properties
     
+    /// The web view for displaying video content.
     private var webView: WKWebView = {
         let view = WKWebView(frame: .zero)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    // UIView to contain the video player
+    /// A view to contain the video player.
     private let playerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    // Label to display the number of likes
+    /// A label to display the number of likes.
     let likesLabel: UILabel = {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -60,6 +65,7 @@ final class FeedCell: UICollectionViewCell {
         return view
     }()
     
+    /// A view for displaying contributor information.
     let contributorView: UIView = {
         let view = UIView()
         view.backgroundColor = .clear
@@ -67,6 +73,7 @@ final class FeedCell: UICollectionViewCell {
         return view
     }()
     
+    /// A label to display the contributor title.
     let descriptorLabel: UILabel = {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -78,6 +85,7 @@ final class FeedCell: UICollectionViewCell {
         return view
     }()
     
+    /// A button to display the author's name.
     let authorButton: UIButton = {
         let view = UIButton(type: .system)
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -85,10 +93,10 @@ final class FeedCell: UICollectionViewCell {
         view.titleLabel?.textAlignment = .right
         view.setTitleColor(AppStyle.Color.primaryColor, for: .normal)
         view.contentHorizontalAlignment = .right
-        
         return view
     }()
     
+    /// A stack view to contain the likes label and contributor view.
     let stackView: UIStackView = {
         let view = UIStackView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -105,7 +113,9 @@ final class FeedCell: UICollectionViewCell {
     
     // MARK: - Initialization
     
-    // Initialize the cell
+    /// Initializes the cell with the specified frame.
+    ///
+    /// - Parameter frame: The frame rectangle for the view.
     override init(frame: CGRect) {
         super.init(frame: .zero)
         layout()
@@ -114,30 +124,31 @@ final class FeedCell: UICollectionViewCell {
         configureTapAnimation()
     }
     
-    // Required initializer not implemented
+    /// Initializes the cell from a decoder.
+    ///
+    /// - Parameter coder: An unarchiver object.
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     // MARK: - Layout
     
+    /// Lays out subviews.
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        // Improve scrolling performance with an explicit shadowPath
+        // Improve scrolling performance with an explicit shadowPath.
         layer.shadowPath = UIBezierPath(
             roundedRect: bounds,
             cornerRadius: AppStyle.Radius.default
         ).cgPath
     }
-    
 }
 
 private extension FeedCell {
     
-    // Set up the layout constraints
+    /// Sets up the layout constraints.
     func layout() {
-        
         playerView.backgroundColor = AppStyle.Color.secondaryBackgroundColor
         
         contentView.layer.masksToBounds = true
@@ -145,7 +156,6 @@ private extension FeedCell {
         layer.masksToBounds = false
         
         contentView.addSubview(playerView)
-        
         playerView.addSubview(webView)
         playerView.addSubview(stackView)
         
@@ -160,7 +170,7 @@ private extension FeedCell {
             playerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             playerView.topAnchor.constraint(equalTo: contentView.topAnchor),
             playerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-
+            
             stackView.topAnchor.constraint(equalTo: webView.bottomAnchor, constant: AppStyle.Spacing.default),
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: AppStyle.Spacing.default),
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -AppStyle.Spacing.default),
@@ -184,11 +194,13 @@ private extension FeedCell {
         bottomConstraint?.isActive = true
     }
     
+    /// Configures tap animation for the player view.
     func configureTapAnimation() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
         playerView.addGestureRecognizer(tapGesture)
     }
     
+    /// Configures shadow effects for the cell.
     func configureShadowEffect() {
         layer.shadowRadius = AppStyle.Radius.shadowRadius
         layer.shadowOpacity = 0.20
@@ -196,12 +208,16 @@ private extension FeedCell {
         layer.shadowOffset = CGSize(width: 0, height: 5)
     }
     
+    /// Configures rounded corners for the cell.
     func configureRoundedCorners() {
         contentView.layer.cornerRadius = AppStyle.Radius.default
         webView.layer.cornerRadius = AppStyle.Radius.default
         layer.cornerRadius = AppStyle.Radius.default
     }
     
+    /// Handles tap gestures on the player view.
+    ///
+    /// - Parameter sender: The tap gesture recognizer.
     @objc func handleTap(_ sender: UITapGestureRecognizer) {
         UIView.animate(withDuration: Constants.animationDuration, animations: {
             self.playerView.transform = CGAffineTransform(scaleX: Constants.scaleTransform, y: Constants.scaleTransform)
@@ -216,7 +232,10 @@ private extension FeedCell {
 // MARK: - Configuration
 
 extension FeedCell {
-    // Configure the cell with the provided content
+    
+    /// Configures the cell with the provided content.
+    ///
+    /// - Parameter content: The content to display in the cell.
     func configure(content: FeedCellContent) {
         guard let videoUrl = content.videoUrl else {
             return
@@ -245,12 +264,16 @@ extension FeedCell {
     }
 }
 
+// MARK: - RxSwift Integration
+
 extension FeedCell {
     
+    /// A structure defining the input for the cell's reactive bindings.
     struct Input {
-        
+        // Define any inputs if needed
     }
     
+    /// A structure defining the cell output
     struct Output {
         let authorButtonTapObservable: Observable<Void>
         let disposeBag: DisposeBag
