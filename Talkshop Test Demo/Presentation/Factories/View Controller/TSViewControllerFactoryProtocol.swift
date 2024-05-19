@@ -24,4 +24,9 @@ protocol TSViewControllerFactoryProtocol {
     /// - Returns: A configured instance of MyProfileViewController.
     func createMyProfileViewController(viewModel: MyProfileProtocol) -> MyProfileViewController
     
+    /// Creates and configures a view controller for Post
+    ///
+    /// - Parameter viewModel: The view model for Post
+    /// - Returns: A configured instance of PostViewController
+    func createPostViewController(viewModel: PostProtocol) -> PostViewController
 }

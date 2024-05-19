@@ -79,7 +79,6 @@ private extension MyFeedViewController {
         view.addSubview(collectionView)
         view.addSubview(activityIndicator)
         collectionView.refreshControl = refreshControl
-        
         refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         
         NSLayoutConstraint.activate([
@@ -236,6 +235,20 @@ private extension MyFeedViewController {
                 this.present(viewController, animated: true, completion: nil)
             })
             .disposed(by: output.disposeBag)
+        
+        output.cellTappedObservable
+            .observe(on: MainScheduler.instance)
+            .withUnretained(self)
+            .subscribe(onNext: { this, _ in
+                guard let user = content.contributorContent?.user,
+                      let post = content.contributorContent?.post else {
+                    return
+                }
+                let viewModel = this.mainFactory.viewModelFactory.createPostViewModel(post: post, user: user)
+                let viewController = this.mainFactory.viewControllerFactory.createPostViewController(viewModel: viewModel)
+                this.present(viewController, animated: true, completion: nil)
+            })
+            .disposed(by: disposeBag)
         
         return cell
     }

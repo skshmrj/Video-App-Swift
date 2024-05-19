@@ -8,7 +8,7 @@
 import Foundation
 
 /// A struct representing a post.
-struct Post {
+struct Post: Hashable {
     /// The unique identifier of the post.
     let postId: String
     

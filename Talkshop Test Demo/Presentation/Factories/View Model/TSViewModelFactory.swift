@@ -27,4 +27,14 @@ struct TSViewModelFactory: TSViewModelFactoryProtocol {
     func createMyProfileViewModel(fetchPostsUseCase: FetchPostsUseCaseProtocol, user: User) -> MyProfileProtocol {
         MyProfileViewModel(fetchPostsUseCase: fetchPostsUseCase, user: user)
     }
+    
+    /// Creates a view model for Post
+    ///
+    /// - Parameters:
+    ///   - post: The post object
+    ///   - user: The user object
+    /// - Returns: A view model conforming to `PostProtocol`.
+    func createPostViewModel(post: Post, user: User) -> PostProtocol {
+        PostViewModel(user: user, post: post)
+    }
 }

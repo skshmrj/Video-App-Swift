@@ -104,7 +104,7 @@ final class MyFeedViewModel: MyFeedProtocol {
                 guard let url = URL(string: post.videoUrl) else {
                     return nil
                 }
-                return .myFeedCell(.init(videoUrl: url, contributorContent: .init(user: post.user, likesCount: post.likeCount)))
+                return .myFeedCell(.init(videoUrl: url, contributorContent: .init(user: post.user, post: post, likesCount: post.likeCount)))
             })
         ]
         return dS

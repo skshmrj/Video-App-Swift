@@ -18,9 +18,13 @@ extension UIAlertController {
     ///
     /// This initializer sets up an alert with a localized "error" title and the provided error message.
     /// It also adds a dismiss button with a localized "dismiss" title.
-    convenience init(errorMessage: String) {
+    convenience init(errorMessage: String, title: String? = nil) {
         // Initialize the UIAlertController with a localized error title and the provided error message
-        self.init(title: "error".localized, message: errorMessage, preferredStyle: .alert)
+        if let title = title {
+            self.init(title: title, message: errorMessage, preferredStyle: .alert)
+        } else {
+            self.init(title: "error".localized, message: errorMessage, preferredStyle: .alert)
+        }
         
         // Add a dismiss action with a localized dismiss title
         self.addAction(UIAlertAction(title: "dismiss".localized, style: .default, handler: nil))

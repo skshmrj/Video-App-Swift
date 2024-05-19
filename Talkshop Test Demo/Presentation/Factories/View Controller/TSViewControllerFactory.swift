@@ -31,4 +31,11 @@ class TSViewControllerFactory: TSViewControllerFactoryProtocol {
         MyProfileViewController(viewModel: viewModel)
     }
     
+    /// Creates and configures a view controller for Post
+    ///
+    /// - Parameter viewModel: The view model for Post
+    /// - Returns: A configured instance of PostViewController
+    func createPostViewController(viewModel: PostProtocol) -> PostViewController {
+        PostViewController(viewModel: viewModel)
+    }
 }

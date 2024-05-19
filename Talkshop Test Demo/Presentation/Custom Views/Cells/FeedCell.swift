@@ -20,6 +20,7 @@ struct FeedCellContent: Hashable {
 /// A structure defining the content for the contributor view.
 struct ContributorViewContent: Hashable {
     let user: User?
+    let post: Post?
     let likesCount: Int?  // Number of likes for the video
 }
 
@@ -105,6 +106,8 @@ final class FeedCell: UICollectionViewCell {
         view.distribution = .fillProportionally
         return view
     }()
+    
+    let cellTappedSubject = PublishSubject<Void>()
     
     var bottomConstraint: NSLayoutConstraint?
     var topConstraint: NSLayoutConstraint?
@@ -219,11 +222,12 @@ private extension FeedCell {
     ///
     /// - Parameter sender: The tap gesture recognizer.
     @objc func handleTap(_ sender: UITapGestureRecognizer) {
-        UIView.animate(withDuration: Constants.animationDuration, animations: {
-            self.playerView.transform = CGAffineTransform(scaleX: Constants.scaleTransform, y: Constants.scaleTransform)
-        }) { _ in
+        UIView.animate(withDuration: Constants.animationDuration, animations: { [weak self] in
+            self?.playerView.transform = CGAffineTransform(scaleX: Constants.scaleTransform, y: Constants.scaleTransform)
+        }) { [weak self] _ in
             UIView.animate(withDuration: Constants.animationDuration) {
-                self.playerView.transform = CGAffineTransform.identity
+                self?.playerView.transform = CGAffineTransform.identity
+                self?.cellTappedSubject.onNext(())
             }
         }
     }
@@ -251,6 +255,7 @@ extension FeedCell {
             likesButton.setTitle("\(contributorContent.likesCount ?? .zero) likes", for: .normal)
             authorButton.setTitle(contributorContent.user?.userName ?? "", for: .normal)
             stackView.isHidden = false
+            contributorView.isHidden = contributorContent.user == nil
         } else {
             stackView.isHidden = true
             // Set bottom constraint
@@ -277,6 +282,7 @@ extension FeedCell {
     struct Output {
         let authorButtonTapObservable: Observable<Void>
         let likeButtonTapObservable: Observable<Void>
+        let cellTappedObservable: Observable<Void>
         let disposeBag: DisposeBag
     }
     
@@ -285,6 +291,7 @@ extension FeedCell {
         
         return Output(authorButtonTapObservable: authorButton.rx.tap.asObservable(), 
                       likeButtonTapObservable: likesButton.rx.tap.asObservable(),
+                      cellTappedObservable: cellTappedSubject.asObservable(),
                       disposeBag: disposeBag)
     }
     
