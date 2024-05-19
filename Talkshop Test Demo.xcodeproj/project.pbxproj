@@ -48,6 +48,8 @@
 		40DC77552BF9161700025AC9 /* UsersRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40DC77542BF9161700025AC9 /* UsersRepository.swift */; };
 		40DC77572BF9162A00025AC9 /* FetchUsersUseCaseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40DC77562BF9162A00025AC9 /* FetchUsersUseCaseProtocol.swift */; };
 		40DC77592BF9163500025AC9 /* FetchUsersUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40DC77582BF9163500025AC9 /* FetchUsersUseCase.swift */; };
+		40DC775B2BF9305700025AC9 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40DC775A2BF9305700025AC9 /* PostViewController.swift */; };
+		40DC775D2BF9306000025AC9 /* PostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40DC775C2BF9306000025AC9 /* PostViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -95,6 +97,8 @@
 		40DC77542BF9161700025AC9 /* UsersRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersRepository.swift; sourceTree = "<group>"; };
 		40DC77562BF9162A00025AC9 /* FetchUsersUseCaseProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchUsersUseCaseProtocol.swift; sourceTree = "<group>"; };
 		40DC77582BF9163500025AC9 /* FetchUsersUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchUsersUseCase.swift; sourceTree = "<group>"; };
+		40DC775A2BF9305700025AC9 /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
+		40DC775C2BF9306000025AC9 /* PostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewModel.swift; sourceTree = "<group>"; };
 		5AFFC7DF8D89C3EFACA07FF9 /* Pods-Talkshop Test Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Talkshop Test Demo.debug.xcconfig"; path = "Target Support Files/Pods-Talkshop Test Demo/Pods-Talkshop Test Demo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -214,6 +218,7 @@
 		4012F97F2BEFD72100BD5F0E /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				40DC775E2BF9306400025AC9 /* Post */,
 				4012F96E2BEFBED200BD5F0E /* TSTabViewController.swift */,
 				4012F9812BEFD73400BD5F0E /* My Profile */,
 				4012F9802BEFD72B00BD5F0E /* My Feed */,
@@ -368,6 +373,15 @@
 			path = Users;
 			sourceTree = "<group>";
 		};
+		40DC775E2BF9306400025AC9 /* Post */ = {
+			isa = PBXGroup;
+			children = (
+				40DC775A2BF9305700025AC9 /* PostViewController.swift */,
+				40DC775C2BF9306000025AC9 /* PostViewModel.swift */,
+			);
+			path = Post;
+			sourceTree = "<group>";
+		};
 		E08043E90A5DC6171208BC87 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -513,11 +527,13 @@
 				40DC774D2BF8FF3700025AC9 /* MainFactory.swift in Sources */,
 				40DC77532BF915FB00025AC9 /* UsersRepositoryProtocol.swift in Sources */,
 				40DC77592BF9163500025AC9 /* FetchUsersUseCase.swift in Sources */,
+				40DC775B2BF9305700025AC9 /* PostViewController.swift in Sources */,
 				4018E8392BF531F800C2F8DA /* RepositoryFactory.swift in Sources */,
 				4012F96F2BEFBED200BD5F0E /* TSTabViewController.swift in Sources */,
 				4012F98F2BEFE03600BD5F0E /* Strings + Extension.swift in Sources */,
 				4018E8282BF52F8200C2F8DA /* ResponsePost.swift in Sources */,
 				4018E8262BF52F6600C2F8DA /* PostsRepository.swift in Sources */,
+				40DC775D2BF9306000025AC9 /* PostViewModel.swift in Sources */,
 				4018E82F2BF530CE00C2F8DA /* FetchPostsUseCaseProtocol.swift in Sources */,
 				4018E83B2BF532B400C2F8DA /* TSViewModelFactoryProtocol.swift in Sources */,
 				4012F95B2BEFBDA000BD5F0E /* AppDelegate.swift in Sources */,

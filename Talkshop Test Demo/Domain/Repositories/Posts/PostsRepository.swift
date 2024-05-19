@@ -12,7 +12,7 @@ struct PostRepository: PostsRepositoryProtocol {
     
     func fetchPosts() -> Observable<[ResponsePost]> {
         return Observable.create { observer in
-            let url = "https://jsonplaceholder.typicode.com/posts"
+            let url = "https://mocki.io/v1/f958dd91-d26c-43ce-818d-54e9171554ed"
             
             let request = AF.request(url).responseDecodable(of: [ResponsePost].self) { response in
                 switch response.result {

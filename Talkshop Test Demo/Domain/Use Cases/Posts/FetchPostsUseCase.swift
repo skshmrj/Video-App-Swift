@@ -16,16 +16,16 @@ struct FetchPostsUseCase: FetchPostsUseCaseProtocol {
     }
     
     func fetchPosts(userId: String? = nil) -> Observable<[Post]> {
-//        let posts = repository.fetchPosts().map { PostMapper.transformPostsResponse(posts: $0) }
-//        return posts
-        var posts = generateDummyData()
-        
-        if let userId = userId {
-            let postsOfUser = posts.filter { $0.user.userId == userId }
-            return .just(postsOfUser)
-        } else {
-            return .just(posts)
-        }
+        let posts = repository.fetchPosts().map { PostMapper.transformPostsResponse(posts: $0) }
+        return posts
+//        var posts = generateDummyData()
+//        
+//        if let userId = userId {
+//            let postsOfUser = posts.filter { $0.user.userId == userId }
+//            return .just(postsOfUser)
+//        } else {
+//            return .just(posts)
+//        }
     }
     
     private func generateDummyData() -> [Post] {

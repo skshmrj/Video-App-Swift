@@ -34,6 +34,12 @@ final class MyProfileViewController: UIViewController {
         return collectionView
     }()
     
+    let activityIndicator: UIActivityIndicatorView = {
+        let view = UIActivityIndicatorView(style: .large)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     let refreshControl = UIRefreshControl()
     
     
@@ -75,6 +81,7 @@ extension MyProfileViewController {
     private func layout() {
         view.addSubview(collectionView)
         view.addSubview(closeButton)
+        view.addSubview(activityIndicator)
         
         collectionView.refreshControl = refreshControl
         
@@ -89,12 +96,28 @@ extension MyProfileViewController {
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
+            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
+    }
+    
+    // Function to start animating the activity indicator
+    func startLoading() {
+        activityIndicator.startAnimating()
+        activityIndicator.isHidden = false
+    }
+    
+    // Function to stop animating the activity indicator
+    func stopLoading() {
+        activityIndicator.stopAnimating()
+        activityIndicator.isHidden = true
     }
     
     @objc private func refreshData() {
         // For demonstration purposes, we'll wait 2 seconds and then end refreshing
+        startLoading()
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
             self?.isActiveObservable.onNext(true)
         }
@@ -109,6 +132,8 @@ extension MyProfileViewController {
         
         bindDataSource()
         bindSupplementaryView()
+        
+        startLoading()
         
         let output = viewModel.connect(input: .init(isActiveObservable: isActiveObservable))
         
@@ -126,6 +151,7 @@ extension MyProfileViewController {
             .observe(on: MainScheduler.instance)
             .withUnretained(self)
             .subscribe(onNext: { this, snapshot in
+                this.stopLoading()
                 this.refreshControl.endRefreshing()
                 this.dataSource?.apply(snapshot, animatingDifferences: false)
             })
