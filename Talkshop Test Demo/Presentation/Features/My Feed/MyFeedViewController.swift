@@ -99,12 +99,8 @@ extension MyFeedViewController {
     }
     
     @objc private func refreshData() {
-        // For demonstration purposes, we'll wait 2 seconds and then end refreshing
         startLoading()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
-            self?.isActiveObservable.onNext(true)
-        }
-        
+        isActiveObservable.onNext(true)
     }
     
     /// Binds view model outputs to the view.
@@ -136,6 +132,15 @@ extension MyFeedViewController {
                 this.stopLoading()
                 this.refreshControl.endRefreshing()
                 this.dataSource?.apply(snapshot, animatingDifferences: false)
+            })
+            .disposed(by: disposeBag)
+        
+        output.errorObservable
+            .observe(on: MainScheduler.instance)
+            .withUnretained(self)
+            .subscribe(onNext: { this, error in
+                let alert = UIAlertController(errorMessage: error.localizedDescription)
+                this.present(alert, animated: true)
             })
             .disposed(by: disposeBag)
     }

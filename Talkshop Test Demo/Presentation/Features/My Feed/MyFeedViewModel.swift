@@ -44,6 +44,8 @@ final class MyFeedViewModel: MyFeedProtocol {
     
     let dataSource = BehaviorRelay<[MyFeedDataSource.DataSource]>(value: [])
     
+    let errorSubject = PublishSubject<Error>()
+    
     let fetchPostsUseCase: FetchPostsUseCaseProtocol
     
     let disposeBag = DisposeBag()
@@ -54,20 +56,23 @@ final class MyFeedViewModel: MyFeedProtocol {
     
     func connect(input: MyFeedViewModelConnection.Input) -> MyFeedViewModelConnection.Output {
         
-        let errorSubject = PublishSubject<Error>()
-        
+
         input.isActiveObservable
             .filter { $0 }
             .flatMap { arg in
                 self.fetchPosts()
+                    .catch { [weak self] error in
+                        self?.errorSubject.onNext(error)
+                        return .just([])
+                    }
             }
             .subscribe(onNext: { [weak self] posts in
                 guard let dataSource = self?.generateDataSource(posts: posts) else {
                     return
                 }
                 self?.dataSource.accept(dataSource)
-            }, onError: { error in
-                errorSubject.onNext(error)
+            }, onError: { [weak self] error in
+                self?.errorSubject.onNext(error)
             })
             .disposed(by: disposeBag)
         

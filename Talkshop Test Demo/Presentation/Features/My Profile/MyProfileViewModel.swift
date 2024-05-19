@@ -49,6 +49,8 @@ final class MyProfileViewModel: MyProfileProtocol {
     
     let disposeBag = DisposeBag()
     
+    let errorSubject = PublishSubject<Error>()
+    
     let user: User
     
     init(fetchPostsUseCase: FetchPostsUseCaseProtocol, user: User) {
@@ -57,14 +59,17 @@ final class MyProfileViewModel: MyProfileProtocol {
     }
     
     func connect(input: MyProfileViewModelConnection.Input) -> MyProfileViewModelConnection.Output {
-        
-        let errorSubject = PublishSubject<Error>()
+
         
         input.isActiveObservable
             .filter { $0 }
             .withUnretained(self)
             .flatMap { this, arg in
                 this.fetchPosts(userId: this.user.userId)
+                    .catch { [weak self] error in
+                        self?.errorSubject.onNext(error)
+                        return .just([])
+                    }
             }
             .subscribe(onNext: { [weak self] posts in
                 guard let user = self?.user,
@@ -72,8 +77,8 @@ final class MyProfileViewModel: MyProfileProtocol {
                     return
                 }
                 self?.dataSource.accept(dataSource)
-            }, onError: { error in
-                errorSubject.onNext(error)
+            }, onError: { [weak self] error in
+                self?.errorSubject.onNext(error)
             })
             .disposed(by: disposeBag)
         
