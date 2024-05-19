@@ -54,14 +54,14 @@ final class FeedCell: UICollectionViewCell {
         return view
     }()
     
-    /// A label to display the number of likes.
-    let likesLabel: UILabel = {
-        let view = UILabel()
+    /// A button to display the number of likes.
+    let likesButton: UIButton = {
+        let view = UIButton()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.setContentCompressionResistancePriority(.required, for: .horizontal)
-        view.font = AppStyle.Font.body
-        view.textColor = AppStyle.Color.primaryColor
-        view.translatesAutoresizingMaskIntoConstraints = false
+        view.titleLabel?.font = AppStyle.Font.body
+        view.setTitleColor(AppStyle.Color.primaryColor, for: .normal)
+        view.contentHorizontalAlignment = .left
         return view
     }()
     
@@ -159,7 +159,7 @@ private extension FeedCell {
         playerView.addSubview(webView)
         playerView.addSubview(stackView)
         
-        stackView.addArrangedSubview(likesLabel)
+        stackView.addArrangedSubview(likesButton)
         stackView.addArrangedSubview(contributorView)
         
         contributorView.addSubview(descriptorLabel)
@@ -248,7 +248,7 @@ extension FeedCell {
         }
         
         if let contributorContent = content.contributorContent {
-            likesLabel.text = "\(contributorContent.likesCount ?? .zero) likes"
+            likesButton.setTitle("\(contributorContent.likesCount ?? .zero) likes", for: .normal)
             authorButton.setTitle(contributorContent.user?.userName ?? "", for: .normal)
             stackView.isHidden = false
         } else {
@@ -276,13 +276,16 @@ extension FeedCell {
     /// A structure defining the cell output
     struct Output {
         let authorButtonTapObservable: Observable<Void>
+        let likeButtonTapObservable: Observable<Void>
         let disposeBag: DisposeBag
     }
     
     func connect(_ input: Input) -> Output {
         disposeBag = DisposeBag()
         
-        return Output(authorButtonTapObservable: authorButton.rx.tap.asObservable(), disposeBag: disposeBag)
+        return Output(authorButtonTapObservable: authorButton.rx.tap.asObservable(), 
+                      likeButtonTapObservable: likesButton.rx.tap.asObservable(),
+                      disposeBag: disposeBag)
     }
     
 }
